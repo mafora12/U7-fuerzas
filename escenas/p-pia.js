@@ -3,7 +3,7 @@
    la arrojó por la ventana.
    Parte de: un asta del tamaño de una torre, que sale desde abajo y se clava en el suelo.
    Clic (en cualquier parte): se forma un círculo donde hiciste clic. Es Pía.
-   Doble clic (en cualquier parte): el círculo siempre cae a la punta del asta.
+   Doble clic (en cualquier parte): el círculo se tambalea y cae siempre a la punta del asta.
    Al caer, asta y círculo se funden en la P. */
 function makePia(){
   const C = P.pia, g = glifos.P, st = Glifo.stem(g);
@@ -32,16 +32,14 @@ function makePia(){
 
     click(x, y){
       if (this.state !== 'ready') return;
-      this.circle = { x: constrain(x, br, W - br), y: constrain(y, br, surf - br) };
+      this.circle = { x: constrain(x, br, W - br), y: constrain(y, br, bowlF.y - br * 2) }; // siempre por encima de la punta
       this.state = 'circle'; this.grow = 0; this.idleF = 0;
     },
 
     dblclick(){
       if (this.state !== 'circle') return;
-      const f = { ...this.circle };
-      this.from = f;
-      this.ctrl = { x: (f.x + bowlF.x) / 2, y: Math.min(f.y, bowlF.y) - S * 0.6 };
-      this.state = 'fall'; this.s = 0; this.idleF = 0;
+      this.from = { ...this.circle };
+      this.state = 'wobble'; this.w = 0; this.s = 0; this.idleF = 0;
     },
 
     freeze(){ this.frozen = true; },
@@ -63,11 +61,18 @@ function makePia(){
         if (this.u >= 1){ this.top = topF; this.state = 'ready'; this.jolt = 1; }
       } else if (this.state === 'circle'){
         this.grow = Math.min(1, this.grow + 1 / C.growFrames);
+      } else if (this.state === 'wobble'){
+        // se tambalea cada vez más fuerte antes de soltarse
+        this.w = Math.min(1, this.w + 1 / C.wobbleFrames);
+        this.circle.x = this.from.x + Math.sin(this.w * Math.PI * 7) * br * 0.12 * this.w;
+        this.circle.y = this.from.y + Math.abs(Math.sin(this.w * Math.PI * 7)) * br * 0.03 * this.w;
+        if (this.w >= 1){ this.from = { ...this.circle }; this.state = 'fall'; }
       } else if (this.state === 'fall'){
+        // cae por gravedad y se desliza hacia la punta del asta
         this.s = Math.min(1, this.s + 1 / C.fallFrames);
-        const s = this.s * this.s * (1.6 - 0.6 * this.s), a = this.from, c = this.ctrl, b = bowlF, k = 1 - s;
-        this.circle.x = k * k * a.x + 2 * k * s * c.x + s * s * b.x;
-        this.circle.y = k * k * a.y + 2 * k * s * c.y + s * s * b.y;
+        const a = this.from, s = this.s;
+        this.circle.x = a.x + (bowlF.x - a.x) * smooth(s);
+        this.circle.y = a.y + (bowlF.y - a.y) * s * s;
         if (this.s >= 1){ this.state = 'fuse'; this.jolt = 0.7; }
       } else if (this.state === 'fuse'){
         this.e = Math.min(1, this.e + 1 / C.fuseFrames);
@@ -96,7 +101,7 @@ function makePia(){
 
     rules(){
       return [['estado', { wait: 'suelo', rise: 'el asta sale y se clava', ready: 'asta clavada',
-          circle: 'Pía (círculo)', fall: 'cae a la punta', fuse: 'se funden', formed: 'P formada' }[this.state]],
+          circle: 'Pía (círculo)', wobble: 'se tambalea', fall: 'cae a la punta', fuse: 'se funden', formed: 'P formada' }[this.state]],
         ['acción siguiente', { ready: 'clic', circle: 'doble clic' }[this.state] || '—'],
         ['caída', (this.s * 100).toFixed(0) + ' %'],
         ['asta + círculo → P', (this.e * 100).toFixed(0) + ' %']];

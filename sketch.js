@@ -18,11 +18,12 @@ const P = {
     idleWind: 20       // (solo sala) segundos sin nadie antes de que el viento la empuje
   },
   pia: {
-    height: 0.62,      // alto de la P respecto a la pantalla (el asta es una torre)
+    height: 0.42,      // alto de la P respecto a la pantalla
     buried: 0.14,      // parte del asta que queda clavada bajo el suelo
     rise: 46,          // frames que tarda el asta en salir del suelo y clavarse
     growFrames: 24,    // frames en que se forma el círculo con el clic
-    fallFrames: 58,    // frames que tarda el círculo en caer a la punta del asta
+    wobbleFrames: 70,  // frames que el círculo se tambalea antes de caer
+    fallFrames: 50,    // frames que tarda el círculo en caer a la punta del asta
     fuseFrames: 45,    // frames en que asta y círculo se funden en la P
     holdAfter: 120,
     idleWind: 20       // (solo sala) segundos sin nadie antes de que pase solo
