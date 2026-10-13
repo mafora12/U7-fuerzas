@@ -1,0 +1,18 @@
+/* Layout: lienzo a pantalla completa, sin interfaz visible. Tema oscuro único y deliberado (sala de museo / portada web). Tecla R: panel de reglas para la bitácora. */
+:root{
+  --river:#0b1510;
+  --bank:#16261b;
+  --bone:#e9e3cf;
+  --dim:#9aa996;
+  --display:"IM Fell DW Pica","IM Fell English",Georgia,serif;
+  --ui:"Karla","Helvetica Neue",Arial,sans-serif;
+  color-scheme:dark;
+}
+html,body{height:100%}
+body{background:var(--river);color:var(--bone);font-family:var(--ui);overflow:hidden}
+#stage{position:fixed;inset:0}
+#stage canvas{display:block;touch-action:none}
+.preload{position:absolute;opacity:0;pointer-events:none;font-family:var(--display)}
+.rules{position:fixed;right:16px;bottom:calc(env(safe-area-inset-bottom,0px) + 16px);font-size:12px;line-height:1.6;color:var(--dim);background:rgba(11,21,16,.85);border:1px solid var(--bank);padding:10px 12px;min-width:220px;font-variant-numeric:tabular-nums}
+.rules div{display:flex;justify-content:space-between;gap:16px}
+.rules span:last-child{color:var(--bone)}
