@@ -6,7 +6,7 @@ Cada letra de OPHELIA es una mujer que murió de forma trágica y romántica. Un
 | Letra | Mujer | Regla |
 |---|---|---|
 | O | Ofelia | Un círculo cuelga de una cuerda de 4 hilos. Cada pasada del mouse rompe un hilo; cae al río, el agua le abre el centro y el círculo se deforma hasta ser la O, que queda medio hundida. |
-| P | Pía de' Tolomei | Parte de una torre suspendida. **Clic:** se clava en el pantano y aparece un círculo (Pía) en la ventana. **Doble clic:** ella cae, la torre se hunde con ella y al chocar se funden en la P, medio hundida. |
+| P | Pía de' Tolomei | Parte de un asta del tamaño de una torre que sale desde abajo y se clava en un suelo rígido de p. **Clic** (en cualquier parte): se forma un círculo ahí (Pía). **Doble clic** (en cualquier parte): el círculo siempre cae a la punta del asta y se funden en la P. |
 | H | Haidée | Si la separas, su travesaño se quiebra. *(pendiente)* |
 | E | Eco | Si la ignoras, se desvanece en contornos repetidos. *(pendiente)* |
 | L | Laodamía | Se aferra a una copia rígida de sí misma y se apaga con ella. *(pendiente)* |
@@ -19,13 +19,15 @@ Cada letra de OPHELIA es una mujer que murió de forma trágica y romántica. Un
 
 - `index.html`: carga librerías y scripts.
 - `style.css`
-- `sketch.js`: motor (p5.js + Matter.js), agua tipográfica, cambio de escena (el agua sube, cubre todo y baja revelando la siguiente letra), panel de reglas y parámetros `P`.
+- `sketch.js`: motor (p5.js + Matter.js), agua tipográfica, cambio de escena (la cámara baja: la escena anterior sale por arriba y la siguiente entra desde abajo), panel de reglas y parámetros `P`.
 - `glifo.js`: convierte cada letra en un campo de distancias (SDF) para deformar una forma simple hasta volverla la letra.
 - `escenas/o-ofelia.js`: escena O.
 - `escenas/p-pia.js`: escena P.
 - `escenas/pendiente.js`: marcador para escenas sin hacer.
 
 ## Uso
+
+- Al subir cambios, sube el número `?v=` de los scripts en `index.html` para que el navegador no use la versión vieja en caché.
 
 - En línea: https://mafora12.github.io/U7-fuerzas/ (se publica sola con cada push a `main`).
 

@@ -32,13 +32,13 @@ const Glifo = (() => {
     }
   }
 
-  function make(ch, size, rgb){
+  function make(ch, size, rgb, maxN = 460){
     const probe = document.createElement('canvas').getContext('2d');
     probe.font = `${size}px ${FONT}`;
     const m0 = probe.measureText(ch);
     const gw = m0.actualBoundingBoxLeft + m0.actualBoundingBoxRight;
     const gh = m0.actualBoundingBoxAscent + m0.actualBoundingBoxDescent;
-    const k = Math.max(0.5, Math.min(2, pixelDensity(), 460 / (Math.max(gw, gh) * 1.4)));
+    const k = Math.max(0.5, Math.min(2, pixelDensity(), maxN / (Math.max(gw, gh) * 1.4)));
     const N = Math.ceil(Math.max(gw, gh) * 1.4 * k);
 
     const cv = document.createElement('canvas'); cv.width = cv.height = N;
