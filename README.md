@@ -6,7 +6,7 @@ Cada letra de OPHELIA es una mujer que murió de forma trágica y romántica. Un
 | Letra | Mujer | Regla |
 |---|---|---|
 | O | Ofelia | Un círculo cuelga de una cuerda de 4 hilos. Cada pasada del mouse rompe un hilo; cae al río, el agua le abre el centro y el círculo se deforma hasta ser la O, que queda medio hundida. |
-| P | Pía de' Tolomei | Parte de un asta del tamaño de una torre que sale desde abajo y se clava en un suelo rígido de p. **Clic** (en cualquier parte): se forma un círculo ahí (Pía). **Doble clic** (en cualquier parte): el círculo se tambalea y cae siempre a la punta del asta y se funden en la P. |
+| P | Pía de' Tolomei | Parte de un asta del tamaño de una torre que sale desde abajo y se clava en un suelo rígido de p. **Clic** (en cualquier parte): se forma un círculo ahí (Pía). **Otro clic** (cuando quieras, en cualquier parte): el círculo se tambalea y cae siempre a la punta del asta y se funden en la P. |
 | H | Haidée | Si la separas, su travesaño se quiebra. *(pendiente)* |
 | E | Eco | Si la ignoras, se desvanece en contornos repetidos. *(pendiente)* |
 | L | Laodamía | Se aferra a una copia rígida de sí misma y se apaga con ella. *(pendiente)* |
