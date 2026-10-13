@@ -23,6 +23,8 @@ Cada letra de OPHELIA es una mujer que murió de forma trágica y romántica. Un
 
 ## Uso
 
+- En línea: https://mafora12.github.io/U7-fuerzas/ (se publica sola con cada push a `main`).
+
 - Abre `index.html` con Live Server (VS Code) o cualquier servidor local.
 - `index.html#sala`: modo pantalla del museo; si nadie interactúa en 20 s, el viento rompe la cuerda.
 - Tecla **R**: panel de reglas con las variables en vivo (para la bitácora).
