@@ -13,7 +13,10 @@ Cada letra de OPHELIA es una mujer que murió de forma trágica y romántica. Un
 | I | Inés de Castro | Cae; si la persona insiste, su punto vuelve como corona. *(pendiente)* |
 | A | Atala | Sus astas se buscan; el travesaño (el voto) las separa. Si las fuerzas, se envenena y colapsa. *(pendiente)* |
 
-**Regla de todas las escenas:** cada letra parte de un objeto simple y se forma con acciones del mouse.
+O:
+<img width="736" height="981" alt="image" src="https://github.com/user-attachments/assets/b283b823-8b2a-472a-998a-9d2613941af1" />  
+P:
+<img width="600" height="400" alt="image" src="https://github.com/user-attachments/assets/3e876ce9-f016-404f-b28a-14f292d3f87a" />  
 
 ## Estructura
 
