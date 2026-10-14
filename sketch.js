@@ -38,6 +38,24 @@ const P = {
     holdAfter: 150,
     idleWind: 20
   },
+  eco: {
+    height: 0.42,      // alto de la E respecto a la pantalla
+    speed: 9,          // velocidad del eco (px por frame)
+    growFrames: 22,    // frames en que un eco se vuelve brazo
+    fuseFrames: 45,
+    ghosts: 3,         // contornos repetidos de la E al final (el eco que queda)
+    holdAfter: 170,
+    idleWind: 20
+  },
+  laodamia: {
+    height: 0.42,      // alto de la L respecto a la pantalla
+    walk: 3.2,         // px por frame que avanza mientras mantienes presionado
+    back: 0.6,         // qué tan rápido retrocede al soltar (fracción de walk)
+    burn: 2.2,         // segundos de abrazo para que el fuego llegue al máximo
+    fuseFrames: 45,
+    holdAfter: 150,
+    idleWind: 20
+  },
   memoria: {
     start: 0.55,       // memoria con la que empieza cada escena
     decay: 0.035,      // cuánto se olvida por segundo sin interacción
@@ -58,7 +76,11 @@ const ESTILOS = {
   tierra: { rigid: true, char: 'p', tint: '196,150,92', reed: '',
             sky: ['#0d0906', '#2a1a0e'], bed: ['#3b2412', '#120a04'] },          // Rossetti: ocres y sombras
   playa: { rigid: true, char: 'h', tint: '214,180,120', reed: '',
-           sky: ['#06121f', '#1d4560'], bed: ['#6b5232', '#2a1d0e'] }            // Madox Brown: mar y arena
+           sky: ['#06121f', '#1d4560'], bed: ['#6b5232', '#2a1d0e'] },           // Madox Brown: mar y arena
+  bosque: { rigid: true, char: 'e', tint: '160,186,112', reed: '',
+            sky: ['#08120d', '#28472f'], bed: ['#33421f', '#0e1409'] },           // Waterhouse: bosque y estanque
+  brasas: { rigid: true, char: 'l', tint: '196,120,74', reed: '',
+            sky: ['#0b0604', '#2c140b'], bed: ['#3b1c0e', '#100602'] }            // Joy: interior a la luz del fuego
 };
 
 let engine, ctx, W, H, S, surfaceY = 0, reeds = [], rowPats = {}, glifos = {};
@@ -99,7 +121,9 @@ function layout(){
   const mp = ctx.measureText('P'), ghP = (mp.actualBoundingBoxAscent + mp.actualBoundingBoxDescent) / 100;
   const sizeP = Math.min(H * P.pia.height, W * 0.8) / ghP;
   glifos = { O: Glifo.make('O', S, BONE), P: Glifo.make('P', sizeP, BONE, 640),
-             H: Glifo.make('H', sizeFor('H', P.haidee.height), BONE, 640) };
+             H: Glifo.make('H', sizeFor('H', P.haidee.height), BONE, 640),
+             E: Glifo.make('E', sizeFor('E', P.eco.height), BONE, 640),
+             L: Glifo.make('L', sizeFor('L', P.laodamia.height), BONE, 640) };
   reeds = [];
   for (let x = -10, k = 0; x < W + 20; k++){
     reeds.push({ x, k, h: S * (0.3 + ((k * 37) % 11) / 11 * 0.45), ph: k * 1.7 });
@@ -128,7 +152,7 @@ function buildWorld(){
 }
 
 /* ---------- Escenas: una por letra; la palabra solo aparece al final ---------- */
-const SCENES = [makeOfelia, makePia, makeHaidee, () => makeStub('E'), () => makeStub('L'), () => makeStub('I'), () => makeStub('A'), () => makeStub('final')];
+const SCENES = [makeOfelia, makePia, makeHaidee, makeEco, makeLaodamia, () => makeStub('I'), () => makeStub('A'), () => makeStub('final')];
 
 function createScene(i){
   buildWorld();

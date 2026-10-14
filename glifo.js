@@ -138,12 +138,33 @@ const Glifo = (() => {
     return { y0: (best[0] - c) / g.k, y1: (best[1] - c) / g.k };
   }
 
+  // Brazos horizontales que salen a la derecha de un asta (E, F...): franjas de filas con tinta
+  // justo a la derecha del asta; para cada una, hasta dónde llega la tinta. En px de pantalla.
+  function arms(g, st){
+    const c = g.N / 2, col = Math.round(st.x1 * g.k + c) + Math.max(2, Math.round(2 * g.k));
+    const out = []; let j0 = -1;
+    for (let j = 0; j <= g.N; j++){
+      const ink = j < g.N && g.mask[j * g.N + col];
+      if (ink && j0 < 0) j0 = j;
+      if (!ink && j0 >= 0){
+        let xEnd = col;
+        for (let j2 = j0; j2 < j; j2++){
+          let i = col; while (i < g.N && g.mask[j2 * g.N + i]) i++;
+          xEnd = Math.max(xEnd, i);
+        }
+        out.push({ y0: (j0 - c) / g.k, y1: (j - c) / g.k, x1: (xEnd - c) / g.k });
+        j0 = -1;
+      }
+    }
+    return out;
+  }
+
   function box(x, y, b){
     const dx = Math.abs(x - b.cx) - b.hx, dy = Math.abs(y - b.cy) - b.hy;
     return Math.hypot(Math.max(dx, 0), Math.max(dy, 0)) + Math.min(Math.max(dx, dy), 0);
   }
 
-  return { make, render, draw, stem, stems, bar, box };
+  return { make, render, draw, stem, stems, bar, arms, box };
 })();
 
 const smooth = x => { x = Math.min(1, Math.max(0, x)); return x * x * (3 - 2 * x); };
