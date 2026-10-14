@@ -17,6 +17,13 @@ function makeOfelia(){
 
   return {
     level, style: ESTILOS.rio, center: body.position, R, done: false,
+    letter: 'O', dustChar: 'o',
+    obra: { quien: 'Ofelia', obra: 'Ophelia', autor: 'John Everett Millais · 1851–52 · Tate Britain' },
+    focus(){ return this.body.position; },
+    edge(){
+      const a = random(TAU), p = this.body.position;
+      return { x: p.x + Math.cos(a) * R * 0.97, y: p.y + Math.sin(a) * R * 0.97 };
+    },
     body, rope, ax, state: 'hang', strands: C.strands, inside: false, lastPass: -99, idleF: 0,
     frac: 0, morph: 0, still: 0, endF: 0, bubbles: [], drops: [],
 
@@ -24,6 +31,7 @@ function makeOfelia(){
       const b = this.body;
       Body.setVelocity(b, { x: b.velocity.x + dir * mag * C.push, y: b.velocity.y });
       this.strands--; this.lastPass = t; this.idleF = 0;
+      Memoria.give(this, P.memoria.action);
       if (this.strands <= 0){ Composite.remove(engine.world, this.rope); this.state = 'fall'; }
     },
 
@@ -73,7 +81,7 @@ function makeOfelia(){
 
         if (this.state === 'sink'){
           if (this.morph >= 1 && b.speed < 0.15 && Math.abs(this.frac - 0.5) < 0.12){
-            if (++this.still > C.restFrames){ this.state = 'formed'; results.O = { x: p.x / W, angle: b.angle }; }
+            if (++this.still > C.restFrames){ this.state = 'formed'; Memoria.lock(this); }
           } else this.still = 0;
         } else if (++this.endF > C.holdAfter) this.done = true;
       }

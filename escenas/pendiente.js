@@ -1,7 +1,7 @@
 /* Escenas pendientes */
 function makeStub(letter){
   return {
-    letter, level: 0.6, style: ESTILOS.rio, center: { x: -999, y: 0 }, R: 1, done: false,
+    letter, level: 0.6, mem: 0.55, style: ESTILOS.rio, center: { x: -999, y: 0 }, R: 1, done: false,
     freeze(){},
     update(){},
     draw(){

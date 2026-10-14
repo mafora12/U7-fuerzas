@@ -16,3 +16,12 @@ body{background:var(--river);color:var(--bone);font-family:var(--ui);overflow:hi
 .rules{position:fixed;right:16px;bottom:calc(env(safe-area-inset-bottom,0px) + 16px);font-size:12px;line-height:1.6;color:var(--dim);background:rgba(11,21,16,.85);border:1px solid var(--bank);padding:10px 12px;min-width:220px;font-variant-numeric:tabular-nums}
 .rules div{display:flex;justify-content:space-between;gap:16px}
 .rules span:last-child{color:var(--bone)}
+
+/* Cartela de museo: aparece solo si la persona cuidó la letra. Fuera del filtro de memoria, siempre nítida. */
+.cartela{position:fixed;left:24px;bottom:calc(env(safe-area-inset-bottom,0px) + 24px);max-width:min(300px,calc(100% - 48px));background:#ece6d3;color:#1d1b15;padding:14px 18px 12px;display:grid;gap:3px;opacity:0;transform:translateY(8px);transition:opacity .7s ease,transform .7s ease}
+.cartela.on{opacity:1;transform:none}
+.cartela p{margin:0}
+.cartela .quien{font-family:var(--display);font-size:24px;line-height:1.1}
+.cartela .obra{font-family:var(--display);font-style:italic;font-size:15px}
+.cartela .autor{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#5b5648;margin-top:4px}
+@media (prefers-reduced-motion: reduce){.cartela{transition:none}}

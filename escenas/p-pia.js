@@ -27,6 +27,17 @@ function makePia(){
 
   return {
     level, style: ESTILOS.tierra, center: { x: cx, y: surf }, R: g.gw * 0.6, done: false,
+    letter: 'P', dustChar: 'p',
+    obra: { quien: "Pía de' Tolomei", obra: "La Pia de' Tolomei", autor: 'Dante Gabriel Rossetti · 1868–80' },
+    focus(){ return this.circle || { x: towerX, y: this.top }; },
+    edge(){
+      if (this.state === 'wait') return null;
+      if (this.circle && Math.random() < 0.4){
+        const a = random(TAU); return { x: this.circle.x + Math.cos(a) * br, y: this.circle.y + Math.sin(a) * br };
+      }
+      const top = this.state === 'fuse' || this.state === 'formed' ? topF : this.top;
+      return { x: towerX + (Math.random() < 0.5 ? -1 : 1) * stemW / 2, y: random(top, surf) };
+    },
     state: 'wait', delay: 25, top: surf + 4, u: 0, jolt: 0,
     circle: null, grow: 0, from: null, ctrl: null, s: 0, e: 0, endF: 0, idleF: 0, frozen: false,
 
@@ -34,10 +45,12 @@ function makePia(){
       if (this.state === 'ready'){
         this.circle = { x: constrain(x, br, W - br), y: constrain(y, br, bowlF.y - br * 2) }; // siempre por encima de la punta
         this.state = 'circle'; this.grow = 0; this.idleF = 0;
+        Memoria.give(this, P.memoria.action);
       } else if (this.state === 'circle' && this.grow >= 1){
         // segundo clic, no tiene que ser seguido: Pía se tambalea y cae
         this.from = { ...this.circle };
         this.state = 'wobble'; this.w = 0; this.s = 0; this.idleF = 0;
+        Memoria.give(this, P.memoria.action);
       }
     },
 
@@ -75,10 +88,9 @@ function makePia(){
         if (this.s >= 1){ this.state = 'fuse'; this.jolt = 0.7; }
       } else if (this.state === 'fuse'){
         this.e = Math.min(1, this.e + 1 / C.fuseFrames);
-        if (this.e >= 1) this.state = 'formed';
+        if (this.e >= 1){ this.state = 'formed'; Memoria.lock(this); }
       } else if (this.state === 'formed' && ++this.endF > C.holdAfter){
         this.done = true;
-        results.P = { formed: true };
       }
     },
 

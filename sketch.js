@@ -28,19 +28,42 @@ const P = {
     holdAfter: 120,
     idleWind: 20       // (solo sala) segundos sin nadie antes de que pase solo
   },
+  haidee: {
+    height: 0.42,      // alto de la H respecto a la pantalla
+    bondRange: 0.3,    // qué tan cerca (en distancias de la H) hay que acercarlo para que nazca el travesaño
+    breakRatio: 2.3,   // cuánto se puede estirar el travesaño antes de quebrarse
+    spring: 0.07,      // fuerza del resorte del travesaño
+    damping: 0.86,     // amortiguación del resorte
+    fuseFrames: 45,
+    holdAfter: 150,
+    idleWind: 20
+  },
+  memoria: {
+    start: 0.55,       // memoria con la que empieza cada escena
+    decay: 0.035,      // cuánto se olvida por segundo sin interacción
+    action: 0.22,      // cuánto devuelve cada acción (clic, pasada, arrastre)
+    look: 0.10,        // cuánto devuelve por segundo mover el mouse cerca de la forma
+    lookRadius: 0.9,   // radio de "mirar" (en tamaños de letra)
+    erosion: 0.55,     // probabilidad por frame de que se desprenda una letra con memoria 0
+    wind: 0.012,       // viento que se lleva las letras desprendidas
+    cartela: 0.4       // memoria mínima al formarse la letra para que aparezca su cartela
+  },
   descend: 150         // frames que dura el descenso de una escena a la siguiente
 };
 
+// Paletas tomadas de cada cuadro; el filtro de memoria las apaga o las revive.
 const ESTILOS = {
-  rio: { char: 'o', tint: '169,194,162', veil: '7,14,10', veilA: 0.45, reed: 'li', reedTint: '127,154,121',
-         sky: ['#080f0b', '#18291d'], bed: ['#13231a', '#060c09'] },
-  tierra: { rigid: true, char: 'p', tint: '150,140,104', reed: '',
-            sky: ['#060c09', '#141710'], bed: ['#1b1a12', '#0b0a07'] }
+  rio: { char: 'o', tint: '140,196,168', veil: '6,18,12', veilA: 0.45, reed: 'li', reedTint: '112,160,88',
+         sky: ['#07130b', '#1d3a22'], bed: ['#123326', '#04100b'] },             // Millais: verdes del río
+  tierra: { rigid: true, char: 'p', tint: '196,150,92', reed: '',
+            sky: ['#0d0906', '#2a1a0e'], bed: ['#3b2412', '#120a04'] },          // Rossetti: ocres y sombras
+  playa: { rigid: true, char: 'h', tint: '214,180,120', reed: '',
+           sky: ['#06121f', '#1d4560'], bed: ['#6b5232', '#2a1d0e'] }            // Madox Brown: mar y arena
 };
 
 let engine, ctx, W, H, S, surfaceY = 0, reeds = [], rowPats = {}, glifos = {};
 let ready = false, scene = null, next = null, sceneIndex = 0, phase = 'play', camT = 0;
-let showRules = false, t = 0, ripple = 0, fade = 1;
+let showRules = false, t = 0, ripple = 0, fade = 1, lastFilter = '';
 const pointer = { x: -999, y: -999, vx: 0, vy: 0, on: false };
 const results = {}; // memoria de cada letra para la escena final
 const $ = id => document.getElementById(id);
@@ -60,6 +83,8 @@ function setup(){
   const at = e => { const r = el.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
   el.addEventListener('click', e => { if (phase === 'play' && scene.click) scene.click(...at(e)); });
   el.addEventListener('dblclick', e => { if (phase === 'play' && scene.dblclick) scene.dblclick(...at(e)); });
+  el.addEventListener('pointerdown', e => { if (phase === 'play' && scene.press) scene.press(...at(e)); });
+  addEventListener('pointerup', () => { if (scene && scene.release) scene.release(); });
   el.addEventListener('pointerleave', () => { pointer.on = false; pointer.x = pointer.y = -999; });
   const wait = new Promise(r => setTimeout(r, 2500));
   Promise.race([document.fonts.load('100px "IM Fell DW Pica"'), wait])
@@ -73,7 +98,8 @@ function layout(){
   ctx.font = `100px ${FONT}`;
   const mp = ctx.measureText('P'), ghP = (mp.actualBoundingBoxAscent + mp.actualBoundingBoxDescent) / 100;
   const sizeP = Math.min(H * P.pia.height, W * 0.8) / ghP;
-  glifos = { O: Glifo.make('O', S, BONE), P: Glifo.make('P', sizeP, BONE, 640) };
+  glifos = { O: Glifo.make('O', S, BONE), P: Glifo.make('P', sizeP, BONE, 640),
+             H: Glifo.make('H', sizeFor('H', P.haidee.height), BONE, 640) };
   reeds = [];
   for (let x = -10, k = 0; x < W + 20; k++){
     reeds.push({ x, k, h: S * (0.3 + ((k * 37) % 11) / 11 * 0.45), ph: k * 1.7 });
@@ -86,6 +112,12 @@ function layout(){
   }
 }
 
+function sizeFor(ch, frac){
+  ctx.font = `100px ${FONT}`;
+  const m = ctx.measureText(ch), gh = (m.actualBoundingBoxAscent + m.actualBoundingBoxDescent) / 100;
+  return Math.min(H * frac, W * 0.8) / gh;
+}
+
 function buildWorld(){
   Composite.clear(engine.world, false);
   Composite.add(engine.world, [
@@ -96,13 +128,13 @@ function buildWorld(){
 }
 
 /* ---------- Escenas: una por letra; la palabra solo aparece al final ---------- */
-const SCENES = [makeOfelia, makePia,
-  () => makeStub('H'), () => makeStub('E'), () => makeStub('L'), () => makeStub('I'), () => makeStub('A'), () => makeStub('final')];
+const SCENES = [makeOfelia, makePia, makeHaidee, () => makeStub('E'), () => makeStub('L'), () => makeStub('I'), () => makeStub('A'), () => makeStub('final')];
 
 function createScene(i){
   buildWorld();
   const sc = SCENES[Math.min(i, SCENES.length - 1)]();
   sc.surf = H * sc.level;
+  Memoria.init(sc);
   return sc;
 }
 
@@ -122,6 +154,7 @@ function draw(){
     scene.freeze();
     next = createScene(sceneIndex + 1);
     phase = 'descend'; camT = 0;
+    Cartela.hide();
   }
   let off = 0;
   if (phase === 'descend'){
@@ -134,19 +167,26 @@ function draw(){
   renderScene(scene, -off, phase === 'play');
   if (next) renderScene(next, H - off, false);
 
+  // el color de la pantalla responde a la memoria de la escena
+  const mem = next ? lerp(scene.mem, next.mem, smooth(camT)) : scene.mem;
+  const f = Memoria.filter(mem);
+  if (f !== lastFilter){ drawingContext.canvas.style.filter = f; lastFilter = f; }
+
   if (fade > 0){ fade = Math.max(0, fade - 0.02); ctx.fillStyle = `rgba(11,21,16,${fade})`; ctx.fillRect(0, 0, W, H); }
   if (showRules && frameCount % 6 === 0){
-    $('rules').innerHTML = scene.rules().map(([k, v]) => `<div><span>${k}</span><span>${v}</span></div>`).join('');
+    $('rules').innerHTML = [['memoria', (scene.mem * 100).toFixed(0) + ' %'], ...scene.rules()].map(([k, v]) => `<div><span>${k}</span><span>${v}</span></div>`).join('');
   }
 }
 
 function renderScene(sc, dy, interactive){
   surfaceY = sc.surf;
   sc.update(interactive);
+  Memoria.tick(sc, interactive);
   ctx.save(); ctx.translate(0, dy);
   drawBack(sc);
   sc.draw();
   drawFront(sc);
+  Memoria.draw(sc);
   ctx.restore();
 }
 

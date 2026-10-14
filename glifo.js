@@ -50,12 +50,13 @@ const Glifo = (() => {
     const px = c.getImageData(0, 0, N, N).data;
 
     const toIn = new Float64Array(N * N), toOut = new Float64Array(N * N);
-    const cols = new Int32Array(N);
+    const cols = new Int32Array(N), mask = new Uint8Array(N * N);
     let inkTop = N, inkBot = 0;
     for (let i = 0; i < N * N; i++){
       const inside = px[i * 4 + 3] >= 128;
       toIn[i] = inside ? 0 : INF;
       toOut[i] = inside ? INF : 0;
+      mask[i] = inside ? 1 : 0;
       if (inside){ const y = (i / N) | 0; cols[i % N]++; if (y < inkTop) inkTop = y; if (y > inkBot) inkBot = y; }
     }
     edt2d(toIn, N); edt2d(toOut, N);
@@ -66,7 +67,7 @@ const Glifo = (() => {
 
     const img = c.createImageData(N, N);
     for (let i = 0; i < N * N; i++){ img.data[i * 4] = rgb[0]; img.data[i * 4 + 1] = rgb[1]; img.data[i * 4 + 2] = rgb[2]; }
-    return { ch, k, N, gw, gh, sdf, cv, c, img, cols, inkTop, inkBot, lastE: -1 };
+    return { ch, k, N, gw, gh, sdf, cv, c, img, cols, mask, inkTop, inkBot, lastE: -1 };
   }
 
   // shape(x, y) devuelve la distancia en px de pantalla a la forma inicial (centro = 0,0).
@@ -109,12 +110,40 @@ const Glifo = (() => {
     return { x0: (i0 - c) / g.k, x1: (i1 + 1 - c) / g.k, y0: (g.inkTop - c) / g.k, y1: (g.inkBot + 1 - c) / g.k };
   }
 
+  // Todas las astas verticales de la letra (de izquierda a derecha)
+  function stems(g){
+    const h = g.inkBot - g.inkTop + 1, c = g.N / 2, out = [];
+    let i0 = -1;
+    for (let i = 0; i <= g.N; i++){
+      const full = i < g.N && g.cols[i] >= 0.85 * h;
+      if (full && i0 < 0) i0 = i;
+      if (!full && i0 >= 0){
+        out.push({ x0: (i0 - c) / g.k, x1: (i - c) / g.k, y0: (g.inkTop - c) / g.k, y1: (g.inkBot + 1 - c) / g.k });
+        i0 = -1;
+      }
+    }
+    return out;
+  }
+
+  // Travesaño horizontal entre dos x (px de pantalla): la franja más larga de tinta en la columna del medio
+  function bar(g, xa, xb){
+    const c = g.N / 2, col = Math.round(((xa + xb) / 2) * g.k + c);
+    let best = null, j0 = -1;
+    for (let j = 0; j <= g.N; j++){
+      const ink = j < g.N && g.mask[j * g.N + col];
+      if (ink && j0 < 0) j0 = j;
+      if (!ink && j0 >= 0){ if (!best || j - j0 > best[1] - best[0]) best = [j0, j]; j0 = -1; }
+    }
+    if (!best) return { y0: -g.gh * 0.05, y1: g.gh * 0.05 };
+    return { y0: (best[0] - c) / g.k, y1: (best[1] - c) / g.k };
+  }
+
   function box(x, y, b){
     const dx = Math.abs(x - b.cx) - b.hx, dy = Math.abs(y - b.cy) - b.hy;
     return Math.hypot(Math.max(dx, 0), Math.max(dy, 0)) + Math.min(Math.max(dx, dy), 0);
   }
 
-  return { make, render, draw, stem, box };
+  return { make, render, draw, stem, stems, bar, box };
 })();
 
 const smooth = x => { x = Math.min(1, Math.max(0, x)); return x * x * (3 - 2 * x); };
