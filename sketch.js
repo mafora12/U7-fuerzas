@@ -107,7 +107,7 @@ const ESTILOS = {
 
 let engine, ctx, W, H, S, surfaceY = 0, reeds = [], rowPats = {}, glifos = {};
 let ready = false, scene = null, next = null, sceneIndex = 0, phase = 'play', camT = 0;
-let showRules = false, t = 0, ripple = 0, fade = 1, lastFilter = '', layer, lctx;
+let showRules = false, t = 0, ripple = 0, fade = 1, lastFilter = '', layer, lctx, fx, fxctx;
 const pointer = { x: -999, y: -999, vx: 0, vy: 0, on: false };
 const $ = id => document.getElementById(id);
 
@@ -151,6 +151,9 @@ function layout(){
   layer = document.createElement('canvas');
   layer.width = Math.round(W * pixelDensity()); layer.height = Math.round(H * pixelDensity());
   lctx = layer.getContext('2d');
+  // capa de efectos que no se apagan con el olvido (el veneno de la A)
+  fx = $('fx'); fx.width = layer.width; fx.height = layer.height;
+  fxctx = fx.getContext('2d');
   reeds = [];
   for (let x = -10, k = 0; x < W + 20; k++){
     reeds.push({ x, k, h: S * (0.3 + ((k * 37) % 11) / 11 * 0.45), ph: k * 1.7 });
@@ -220,6 +223,7 @@ function draw(){
   }
 
   Engine.update(engine, 1000 / 60);
+  fxctx.setTransform(1, 0, 0, 1, 0, 0); fxctx.clearRect(0, 0, fx.width, fx.height);
   renderScene(scene, -off, phase === 'play');
   if (next) renderScene(next, H - off, false);
 
@@ -251,6 +255,12 @@ function renderScene(sc, dy, interactive){
   ctx.restore();
 
   ctx.save(); ctx.translate(0, dy); drawFront(sc); ctx.restore();
+
+  if (sc.drawFx){
+    const pd2 = pixelDensity();
+    fxctx.setTransform(pd2, 0, 0, pd2, 0, dy * pd2);
+    sc.drawFx(fxctx);
+  }
 }
 
 /* ---------- Agua o tierra: hechas de letras ---------- */

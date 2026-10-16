@@ -22,13 +22,13 @@ function makeAtala(){
                    hx: (xAt(R, (d.cross.y0 + d.cross.y1) / 2) - xAt(L, (d.cross.y0 + d.cross.y1) / 2)) / 2, hy: crossH / 2 };
   const shape = (x, y) => Math.min(Glifo.seg(x, y, L), Glifo.seg(x, y, R), Glifo.box(x, y, crossL));
   const startDX = Math.min(W * 0.28, W - (cx + R.x0) - S * 0.2);
-  const poison = [122, 168, 96];
+  const poison = 'rgb(70,255,60)';   // verde veneno: se dibuja fuera del filtro del olvido para que siempre se vea
 
   return {
     level, style: ESTILOS.gruta, center: { x: cx, y: surf }, R: g.gw, done: false,
     letter: 'A', dustChar: 'a',
     obra: { quien: 'Atala', obra: 'Atala au tombeau', autor: 'Anne-Louis Girodet · 1808 · Louvre' },
-    state: 'apart', joinT: 0, dx: startDX, grabbed: false, grabOff: 0, vow: 0, venom: 0, e: 0, endF: 0, idleF: 0, frozen: false,
+    state: 'apart', joinT: 0, dx: startDX, grabbed: false, grabOff: 0, vow: 0, venom: 0, drips: [], e: 0, endF: 0, idleF: 0, frozen: false,
 
     focus(){ return { x: cx + this.dx / 2, y: yF }; },
     edge(){
@@ -54,6 +54,8 @@ function makeAtala(){
     freeze(){ this.frozen = true; this.grabbed = false; },
 
     update(interactive){
+      for (const d of this.drips){ d.vy += 0.25; d.y += d.vy; if (d.y > surf) d.a -= 0.1; }
+      this.drips = this.drips.filter(d => d.a > 0);
       if (this.frozen || !interactive) return;
       if (SALA && !this.grabbed && ++this.idleF > C.idleWind * 60){
         if (this.state === 'apart') this.dx = Math.max(0, this.dx - 2);
@@ -71,6 +73,10 @@ function makeAtala(){
         this.vow = Math.min(1, this.vow + 1 / 30);
         if (this.vow >= 1) this.venom = Math.min(1, this.venom + 1 / (C.poison * 60));
         if (this.venom >= 1) this.state = 'fuse';
+        // gotas de veneno que caen del voto
+        if (this.venom > 0 && Math.random() < 0.25){
+          this.drips.push({ x: cx + crossL.cx + random(-crossL.hx, crossL.hx), y: crossY + crossH / 2, vy: 0, a: 1 });
+        }
       } else if (this.state === 'fuse'){
         this.e = Math.min(1, this.e + 1 / C.fuseFrames);
         if (this.e >= 1){ this.state = 'formed'; Cartela.show(this.obra); }
@@ -94,23 +100,33 @@ function makeAtala(){
       this.rod(world(L, 0));
       this.rod(world(R, this.dx));
       if (this.state === 'vow'){
-        // el voto: crece desde el centro; el veneno lo llena de abajo hacia arriba
+        // el voto: crece desde el centro
         const w = crossL.hx * 2 * smooth(this.vow), x0 = cx + crossL.cx - w / 2, y0 = crossY - crossH / 2;
         ctx.fillStyle = bone; ctx.fillRect(x0, y0, w, crossH);
-        const ph = crossH * this.venom;
-        ctx.fillStyle = `rgb(${poison.join(',')})`; ctx.fillRect(x0, y0 + crossH - ph, w, ph);
-        // el veneno también sube por las astas
-        if (this.venom > 0){
-          ctx.save(); ctx.globalAlpha = 0.55 * this.venom; ctx.strokeStyle = `rgb(${poison.join(',')})`;
-          const up = this.venom;
-          for (const s of [world(L, 0), world(R, 0)]){
-            const yy = crossY - (crossY - s.y1) * up, xx = s.x0 + (s.x1 - s.x0) * (yy - s.y0) / (s.y1 - s.y0);
-            const xc = s.x0 + (s.x1 - s.x0) * (crossY - s.y0) / (s.y1 - s.y0);
-            ctx.beginPath(); ctx.moveTo(xc, crossY); ctx.lineTo(xx, yy); ctx.lineWidth = s.w; ctx.stroke();
-          }
-          ctx.restore();
-        }
       }
+    },
+
+    // el veneno va en su propia capa, a opacidad completa y sin el gris del olvido
+    drawFx(f){
+      if (this.venom <= 0 && !this.drips.length) return;
+      const v = this.venom;
+      f.save();
+      f.shadowColor = poison; f.shadowBlur = 18;
+      f.fillStyle = poison; f.strokeStyle = poison;
+      // el voto se llena de abajo hacia arriba
+      const x0 = cx + crossL.cx - crossL.hx, y0 = crossY - crossH / 2, ph = crossH * Math.min(1, v * 1.4);
+      f.fillRect(x0, y0 + crossH - ph, crossL.hx * 2, ph);
+      // y sube por las dos astas hasta la cima
+      const up = smooth(v);
+      for (const s0 of [world(L, 0), world(R, 0)]){
+        const xAtY = y => s0.x0 + (s0.x1 - s0.x0) * (y - s0.y0) / (s0.y1 - s0.y0);
+        const yy = crossY - (crossY - s0.y1) * up, yd = crossY + (s0.y0 - crossY) * up * 0.6;
+        f.beginPath(); f.moveTo(xAtY(yd), yd); f.lineTo(xAtY(yy), yy); f.lineWidth = s0.w * 0.9; f.lineCap = 'butt'; f.stroke();
+      }
+      // gotas
+      f.shadowBlur = 8;
+      for (const d of this.drips){ f.globalAlpha = d.a; f.beginPath(); f.arc(d.x, d.y, Math.max(2, crossH * 0.25), 0, TAU); f.fill(); }
+      f.restore();
     },
 
     rules(){
