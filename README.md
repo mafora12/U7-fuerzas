@@ -73,27 +73,4 @@ El atributo no se explica con texto. Se ve en cómo avanza la pieza: la sucesió
 
 **Qué se espera que la persona descubra:** que cada obra se puede reconstruir con sus acciones, pero que el olvido avanza de todas formas. La única forma de que una obra vuelva es que alguien la mire y la reconstruya otra vez, que es lo que el museo intenta hacer.
 
-## Modelo y herramientas
 
-- **p5.js** para dibujar y **Matter.js** para la física de la O (cuerda, caída y flotación).
-- **Fuerzas** en las demás escenas: gravedad (caída de Pía, péndulo invertido de Inés), resorte con amortiguación (travesaño de Haidée), atracción (astas de Atala) y campo de ruido (partículas de la escena final).
-- **Campos de distancia (SDF):** cada letra se convierte en un mapa de distancias. Para que un objeto simple se vuelva la letra, se interpolan la distancia del objeto y la de la letra, y la forma se deforma de verdad en vez de hacer un fundido.
-
-## Estructura
-
-- `index.html`: carga librerías y scripts.
-- `style.css`
-- `sketch.js`: motor, agua y suelo hechos de letras, descenso entre escenas, panel de reglas y parámetros `P`.
-- `memoria.js`: el olvido (opacidad de cada letra y color de cada fondo) y la cartela.
-- `glifo.js`: campos de distancia de las letras y detección de astas, brazos, travesaños y diagonales.
-- `escenas/o-ofelia.js`, `p-pia.js`, `h-haidee.js`, `e-eco.js`, `l-laodamia.js`, `i-ines.js`, `a-atala.js`: una escena por letra.
-- `escenas/final.js`: OPHELIA completa que se desintegra.
-
-## Uso
-
-- Abre `index.html` con Live Server (VS Code) o cualquier servidor local.
-- `index.html#sala`: modo pantalla del museo.
-- Tecla **R**: panel de reglas con las variables en vivo de cada escena (para la bitácora).
-- Tecla **→**: salta a la siguiente escena (para probar).
-- Los parámetros editables están en el objeto `P` al inicio de `sketch.js`. Los del olvido están en `P.olvido` y los de la escena final en `P.final`.
-- Al subir cambios, sube el número `?v=` de los scripts en `index.html` para que el navegador no use la versión vieja en caché.
