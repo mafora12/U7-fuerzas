@@ -3,8 +3,8 @@
    La sucesión de escenas es una línea de olvido:
    - Cada letra aparece más transparente que la anterior: la O es opaca y la A casi
      transparente.
-   - Cada fondo es más apagado que el anterior: la primera escena es de color vívido
-     y la última casi gris.
+   - El fondo es morado y cada escena es más gris que la anterior: la primera es un
+     morado vívido y la final es gris.
    - En la escena final, OPHELIA completa muestra ese degradado y se desintegra,
      empezando por las letras más olvidadas. */
 const Olvido = {
@@ -35,6 +35,6 @@ const Cartela = {
   hide(){
     const el = $('cartela');
     el.classList.remove('on');
-    setTimeout(() => { if (!el.classList.contains('on')) el.hidden = true; }, 700);
+    setTimeout(() => { if (!el.classList.contains('on')) el.hidden = true; }, 1400);
   }
 };

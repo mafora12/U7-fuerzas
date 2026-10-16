@@ -1,7 +1,7 @@
 /* Layout: lienzo a pantalla completa, sin interfaz visible. Tema oscuro único y deliberado (sala de museo / portada web). Tecla R: panel de reglas para la bitácora. */
 :root{
-  --river:#0b1510;
-  --bank:#16261b;
+  --river:#14082a;
+  --bank:#2a1648;
   --bone:#e9e3cf;
   --dim:#9aa996;
   --display:"IM Fell DW Pica","IM Fell English",Georgia,serif;
@@ -18,7 +18,8 @@ body{background:var(--river);color:var(--bone);font-family:var(--ui);overflow:hi
 .rules span:last-child{color:var(--bone)}
 
 /* Cartela de museo: aparece solo si la persona cuidó la letra. Fuera del filtro de memoria, siempre nítida. */
-.cartela{position:fixed;left:24px;bottom:calc(env(safe-area-inset-bottom,0px) + 24px);max-width:min(300px,calc(100% - 48px));background:#ece6d3;color:#1d1b15;padding:14px 18px 12px;display:grid;gap:3px;opacity:0;transform:translateY(8px);transition:opacity .7s ease,transform .7s ease}
+/* transición lenta */
+.cartela{position:fixed;left:24px;bottom:calc(env(safe-area-inset-bottom,0px) + 24px);max-width:min(300px,calc(100% - 48px));background:#ece6d3;color:#1d1b15;padding:14px 18px 12px;display:grid;gap:3px;opacity:0;transform:translateY(8px);transition:opacity 1.4s ease,transform 1.4s ease}
 .cartela.on{opacity:1;transform:none}
 .cartela p{margin:0}
 .cartela .quien{font-family:var(--display);font-size:24px;line-height:1.1}

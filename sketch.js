@@ -76,9 +76,9 @@ const P = {
   olvido: {
     minAlpha: 0.22,    // opacidad de la última letra (la A); la O siempre es 1
     satStart: 1.35,    // saturación del fondo en la primera escena (vívido)
-    satEnd: 0.12,      // saturación en la escena final (casi gris)
+    satEnd: 0,         // saturación en la escena final (gris)
     brightStart: 1.08, // brillo en la primera escena
-    brightEnd: 0.62    // brillo en la escena final
+    brightEnd: 0.72    // brillo en la escena final
   },
   final: {
     hold: 4,           // segundos que se ve OPHELIA completa antes de desintegrarse
@@ -88,26 +88,21 @@ const P = {
     fade: 0.006,       // cuánto se desvanece cada partícula por frame
     restart: 4         // segundos de pantalla vacía antes de volver a empezar
   },
-  descend: 150         // frames que dura el descenso de una escena a la siguiente
+  descend: 220         // frames que dura el descenso de una escena a la siguiente (lento y suave)
 };
 
-// Paletas tomadas de cada cuadro, en su versión más vívida; el olvido las va apagando.
+// Una sola paleta morada para toda la pieza; el olvido la va volviendo gris escena a escena.
+const MORADO = { tint: '210,170,255', veil: '20,6,36', reedTint: '170,120,230',
+                 sky: ['#2a0f4a', '#7a3fc0'], bed: ['#4a1f7a', '#14072a'] };
 const ESTILOS = {
-  rio: { char: 'o', tint: '150,220,180', veil: '6,24,16', veilA: 0.4, reed: 'li', reedTint: '120,200,90',
-         sky: ['#0d3b1f', '#2f7a3a'], bed: ['#13604c', '#05261c'] },             // Millais: verdes del río
-  tierra: { rigid: true, char: 'p', tint: '230,170,100', reed: '',
-            sky: ['#3a1606', '#a8521c'], bed: ['#6b3412', '#200e04'] },          // Rossetti: ocres y rojos
-  playa: { rigid: true, char: 'h', tint: '240,200,130', reed: '',
-           sky: ['#0a3c78', '#2c8fc4'], bed: ['#b58a46', '#5a3e18'] },           // Madox Brown: mar y arena
-  bosque: { rigid: true, char: 'e', tint: '180,214,120', reed: '',
-            sky: ['#0f3a22', '#3f8f4c'], bed: ['#4f6a24', '#1a260c'] },           // Waterhouse: bosque y estanque
-  brasas: { rigid: true, char: 'l', tint: '240,140,80', reed: '',
-            sky: ['#3a0c04', '#b0381a'], bed: ['#6a2a10', '#1e0703'] },           // Joy: interior a la luz del fuego
-  palacio: { rigid: true, char: 'i', tint: '200,170,240', reed: '',
-             sky: ['#1e1040', '#5a3a9a'], bed: ['#4a2f66', '#160c22'] },          // Comte: corte, terciopelo y oro
-  gruta: { rigid: true, char: 'a', tint: '210,200,160', reed: '',
-           sky: ['#0c2626', '#2f6a68'], bed: ['#4d4532', '#14120c'] },            // Girodet: gruta y luz fría
-  final: { empty: true, char: '.', sky: ['#1f201e', '#363834'] }                 // la palabra sola
+  rio:     { ...MORADO, char: 'o', veilA: 0.4, reed: 'li' },   // agua
+  tierra:  { ...MORADO, rigid: true, char: 'p', reed: '' },
+  playa:   { ...MORADO, rigid: true, char: 'h', reed: '' },
+  bosque:  { ...MORADO, rigid: true, char: 'e', reed: '' },
+  brasas:  { ...MORADO, rigid: true, char: 'l', reed: '' },
+  palacio: { ...MORADO, rigid: true, char: 'i', reed: '' },
+  gruta:   { ...MORADO, rigid: true, char: 'a', reed: '' },
+  final:   { ...MORADO, empty: true, char: '.' }                  // la palabra sola
 };
 
 let engine, ctx, W, H, S, surfaceY = 0, reeds = [], rowPats = {}, glifos = {};
@@ -183,6 +178,9 @@ function buildWorld(){
   ]);
 }
 
+// curva suave de entrada y salida para las transiciones
+const ease = x => 0.5 - 0.5 * Math.cos(Math.PI * constrain(x, 0, 1));
+
 /* ---------- Escenas: una por letra; la palabra solo aparece al final ---------- */
 const SCENES = [makeOfelia, makePia, makeHaidee, makeEco, makeLaodamia, makeInes, makeAtala, makeFinal];
 
@@ -217,7 +215,7 @@ function draw(){
   let off = 0;
   if (phase === 'descend'){
     camT = Math.min(1, camT + 1 / P.descend);
-    off = smooth(camT) * H;
+    off = ease(camT) * H;
     if (camT >= 1){ scene = next; next = null; sceneIndex = Math.min(sceneIndex + 1, SCENES.length - 1); phase = 'play'; off = 0; }
   }
 
@@ -226,10 +224,10 @@ function draw(){
   if (next) renderScene(next, H - off, false);
 
   // cada escena es más apagada que la anterior
-  const f = Olvido.filter(next ? lerp(scene.index, next.index, smooth(camT)) : scene.index);
+  const f = Olvido.filter(next ? lerp(scene.index, next.index, ease(camT)) : scene.index);
   if (f !== lastFilter){ drawingContext.canvas.style.filter = f; lastFilter = f; }
 
-  if (fade > 0){ fade = Math.max(0, fade - 0.02); ctx.fillStyle = `rgba(11,21,16,${fade})`; ctx.fillRect(0, 0, W, H); }
+  if (fade > 0){ fade = Math.max(0, fade - 0.01); ctx.fillStyle = `rgba(20,8,34,${fade})`; ctx.fillRect(0, 0, W, H); }
   if (showRules && frameCount % 6 === 0){
     $('rules').innerHTML = [['escena', (scene.index + 1) + ' / 8'], ['opacidad de la letra', scene.alpha.toFixed(2)], ...scene.rules()].map(([k, v]) => `<div><span>${k}</span><span>${v}</span></div>`).join('');
   }

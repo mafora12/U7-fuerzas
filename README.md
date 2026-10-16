@@ -20,7 +20,7 @@ Cada letra de OPHELIA es una mujer que murió de forma trágica y romántica. Un
 La sucesión de escenas es una línea de olvido:
 
 - **Cada letra es más transparente que la anterior:** la O es opaca y la A casi transparente.
-- **Cada fondo es más apagado que el anterior:** la primera escena es de color vívido y la última casi gris.
+- **El fondo es morado y cada escena es más gris que la anterior:** la primera es un morado vívido y la final es gris. Las transiciones entre escenas son lentas y suaves.
 - **Escena final:** por primera vez aparece OPHELIA completa, con el degradado de transparencia de O a A. Después se desintegra en partículas que se lleva un campo de ruido, empezando por la A (la más olvidada) y terminando en la O. Cuando no queda nada, la pieza vuelve a empezar.
 - Cuando cada letra se forma aparece la cartela de su obra:
 
