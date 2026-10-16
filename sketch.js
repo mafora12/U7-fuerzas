@@ -73,42 +73,47 @@ const P = {
     holdAfter: 150,
     idleWind: 20
   },
-  memoria: {
-    start: 0.55,       // memoria con la que empieza cada escena
-    decay: 0.035,      // cuánto se olvida por segundo sin interacción
-    action: 0.22,      // cuánto devuelve cada acción (clic, pasada, arrastre)
-    look: 0.10,        // cuánto devuelve por segundo mover el mouse cerca de la forma
-    lookRadius: 0.9,   // radio de "mirar" (en tamaños de letra)
-    erosion: 0.55,     // probabilidad por frame de que se desprenda una letra con memoria 0
-    wind: 0.012,       // viento que se lleva las letras desprendidas
-    cartela: 0.4       // memoria mínima al formarse la letra para que aparezca su cartela
+  olvido: {
+    minAlpha: 0.22,    // opacidad de la última letra (la A); la O siempre es 1
+    satStart: 1.35,    // saturación del fondo en la primera escena (vívido)
+    satEnd: 0.12,      // saturación en la escena final (casi gris)
+    brightStart: 1.08, // brillo en la primera escena
+    brightEnd: 0.62    // brillo en la escena final
+  },
+  final: {
+    hold: 4,           // segundos que se ve OPHELIA completa antes de desintegrarse
+    step: 3,           // tamaño de cada partícula (px)
+    spread: 3.5,       // segundos entre que empieza a irse la A y empieza a irse la O
+    wind: 0.03,        // viento que se lleva las partículas
+    fade: 0.006,       // cuánto se desvanece cada partícula por frame
+    restart: 4         // segundos de pantalla vacía antes de volver a empezar
   },
   descend: 150         // frames que dura el descenso de una escena a la siguiente
 };
 
-// Paletas tomadas de cada cuadro; el filtro de memoria las apaga o las revive.
+// Paletas tomadas de cada cuadro, en su versión más vívida; el olvido las va apagando.
 const ESTILOS = {
-  rio: { char: 'o', tint: '140,196,168', veil: '6,18,12', veilA: 0.45, reed: 'li', reedTint: '112,160,88',
-         sky: ['#07130b', '#1d3a22'], bed: ['#123326', '#04100b'] },             // Millais: verdes del río
-  tierra: { rigid: true, char: 'p', tint: '196,150,92', reed: '',
-            sky: ['#0d0906', '#2a1a0e'], bed: ['#3b2412', '#120a04'] },          // Rossetti: ocres y sombras
-  playa: { rigid: true, char: 'h', tint: '214,180,120', reed: '',
-           sky: ['#06121f', '#1d4560'], bed: ['#6b5232', '#2a1d0e'] },           // Madox Brown: mar y arena
-  bosque: { rigid: true, char: 'e', tint: '160,186,112', reed: '',
-            sky: ['#08120d', '#28472f'], bed: ['#33421f', '#0e1409'] },           // Waterhouse: bosque y estanque
-  brasas: { rigid: true, char: 'l', tint: '196,120,74', reed: '',
-            sky: ['#0b0604', '#2c140b'], bed: ['#3b1c0e', '#100602'] },           // Joy: interior a la luz del fuego
-  palacio: { rigid: true, char: 'i', tint: '186,166,206', reed: '',
-             sky: ['#0a0912', '#2b2442'], bed: ['#2d2338', '#0c0a12'] },          // Comte: corte, terciopelo y oro
-  gruta: { rigid: true, char: 'a', tint: '196,186,150', reed: '',
-           sky: ['#06080a', '#1e2b2c'], bed: ['#2e2a20', '#0b0a07'] }             // Girodet: gruta y luz fría
+  rio: { char: 'o', tint: '150,220,180', veil: '6,24,16', veilA: 0.4, reed: 'li', reedTint: '120,200,90',
+         sky: ['#0d3b1f', '#2f7a3a'], bed: ['#13604c', '#05261c'] },             // Millais: verdes del río
+  tierra: { rigid: true, char: 'p', tint: '230,170,100', reed: '',
+            sky: ['#3a1606', '#a8521c'], bed: ['#6b3412', '#200e04'] },          // Rossetti: ocres y rojos
+  playa: { rigid: true, char: 'h', tint: '240,200,130', reed: '',
+           sky: ['#0a3c78', '#2c8fc4'], bed: ['#b58a46', '#5a3e18'] },           // Madox Brown: mar y arena
+  bosque: { rigid: true, char: 'e', tint: '180,214,120', reed: '',
+            sky: ['#0f3a22', '#3f8f4c'], bed: ['#4f6a24', '#1a260c'] },           // Waterhouse: bosque y estanque
+  brasas: { rigid: true, char: 'l', tint: '240,140,80', reed: '',
+            sky: ['#3a0c04', '#b0381a'], bed: ['#6a2a10', '#1e0703'] },           // Joy: interior a la luz del fuego
+  palacio: { rigid: true, char: 'i', tint: '200,170,240', reed: '',
+             sky: ['#1e1040', '#5a3a9a'], bed: ['#4a2f66', '#160c22'] },          // Comte: corte, terciopelo y oro
+  gruta: { rigid: true, char: 'a', tint: '210,200,160', reed: '',
+           sky: ['#0c2626', '#2f6a68'], bed: ['#4d4532', '#14120c'] },            // Girodet: gruta y luz fría
+  final: { empty: true, char: '.', sky: ['#1f201e', '#363834'] }                 // la palabra sola
 };
 
 let engine, ctx, W, H, S, surfaceY = 0, reeds = [], rowPats = {}, glifos = {};
 let ready = false, scene = null, next = null, sceneIndex = 0, phase = 'play', camT = 0;
-let showRules = false, t = 0, ripple = 0, fade = 1, lastFilter = '';
+let showRules = false, t = 0, ripple = 0, fade = 1, lastFilter = '', layer, lctx;
 const pointer = { x: -999, y: -999, vx: 0, vy: 0, on: false };
-const results = {}; // memoria de cada letra para la escena final
 const $ = id => document.getElementById(id);
 
 function setup(){
@@ -147,6 +152,10 @@ function layout(){
              L: Glifo.make('L', sizeFor('L', P.laodamia.height), BONE, 640),
              I: Glifo.make('I', sizeFor('I', P.ines.height), BONE, 640),
              A: Glifo.make('A', sizeFor('A', P.atala.height), BONE, 640) };
+  // capa donde se dibuja la letra, para aplicarle la transparencia de su escena
+  layer = document.createElement('canvas');
+  layer.width = Math.round(W * pixelDensity()); layer.height = Math.round(H * pixelDensity());
+  lctx = layer.getContext('2d');
   reeds = [];
   for (let x = -10, k = 0; x < W + 20; k++){
     reeds.push({ x, k, h: S * (0.3 + ((k * 37) % 11) / 11 * 0.45), ph: k * 1.7 });
@@ -175,13 +184,14 @@ function buildWorld(){
 }
 
 /* ---------- Escenas: una por letra; la palabra solo aparece al final ---------- */
-const SCENES = [makeOfelia, makePia, makeHaidee, makeEco, makeLaodamia, makeInes, makeAtala, () => makeStub('final')];
+const SCENES = [makeOfelia, makePia, makeHaidee, makeEco, makeLaodamia, makeInes, makeAtala, makeFinal];
 
 function createScene(i){
   buildWorld();
   const sc = SCENES[Math.min(i, SCENES.length - 1)]();
   sc.surf = H * sc.level;
-  Memoria.init(sc);
+  sc.index = i;
+  sc.alpha = i < 7 ? Olvido.alpha(i) : 1;   // la final maneja la opacidad de cada letra
   return sc;
 }
 
@@ -197,6 +207,7 @@ function draw(){
   t++;
   pointer.vx *= 0.6; pointer.vy *= 0.6;
 
+  if (scene.restart){ fade = 1; Cartela.hide(); startScene(0); }    // la pieza vuelve a empezar
   if (phase === 'play' && scene.done){
     scene.freeze();
     next = createScene(sceneIndex + 1);
@@ -214,32 +225,45 @@ function draw(){
   renderScene(scene, -off, phase === 'play');
   if (next) renderScene(next, H - off, false);
 
-  // el color de la pantalla responde a la memoria de la escena
-  const mem = next ? lerp(scene.mem, next.mem, smooth(camT)) : scene.mem;
-  const f = Memoria.filter(mem);
+  // cada escena es más apagada que la anterior
+  const f = Olvido.filter(next ? lerp(scene.index, next.index, smooth(camT)) : scene.index);
   if (f !== lastFilter){ drawingContext.canvas.style.filter = f; lastFilter = f; }
 
   if (fade > 0){ fade = Math.max(0, fade - 0.02); ctx.fillStyle = `rgba(11,21,16,${fade})`; ctx.fillRect(0, 0, W, H); }
   if (showRules && frameCount % 6 === 0){
-    $('rules').innerHTML = [['memoria', (scene.mem * 100).toFixed(0) + ' %'], ...scene.rules()].map(([k, v]) => `<div><span>${k}</span><span>${v}</span></div>`).join('');
+    $('rules').innerHTML = [['escena', (scene.index + 1) + ' / 8'], ['opacidad de la letra', scene.alpha.toFixed(2)], ...scene.rules()].map(([k, v]) => `<div><span>${k}</span><span>${v}</span></div>`).join('');
   }
 }
 
 function renderScene(sc, dy, interactive){
   surfaceY = sc.surf;
   sc.update(interactive);
-  Memoria.tick(sc, interactive);
-  ctx.save(); ctx.translate(0, dy);
-  drawBack(sc);
+  ctx.save(); ctx.translate(0, dy); drawBack(sc); ctx.restore();
+
+  // la letra se dibuja en su capa y se pega con la transparencia de su escena
+  const main = ctx, pd = pixelDensity();
+  ctx = lctx;
+  ctx.setTransform(pd, 0, 0, pd, 0, 0); ctx.globalAlpha = 1;
+  ctx.clearRect(0, 0, W, H);
+  ctx.translate(0, dy);
   sc.draw();
-  drawFront(sc);
-  Memoria.draw(sc);
+  ctx = main;
+  ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = sc.alpha;
+  ctx.drawImage(layer, 0, 0);
   ctx.restore();
+
+  ctx.save(); ctx.translate(0, dy); drawFront(sc); ctx.restore();
 }
 
 /* ---------- Agua o tierra: hechas de letras ---------- */
 function drawBack(sc){
   const st = sc.style;
+  if (st.empty){
+    const g0 = ctx.createLinearGradient(0, 0, 0, H);
+    g0.addColorStop(0, st.sky[0]); g0.addColorStop(1, st.sky[1]);
+    ctx.fillStyle = g0; ctx.fillRect(0, 0, W, H);
+    return;
+  }
   const g = ctx.createLinearGradient(0, 0, 0, surfaceY);
   g.addColorStop(0, st.sky[0]); g.addColorStop(1, st.sky[1]);
   ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
@@ -269,6 +293,7 @@ function drawBack(sc){
 
 function drawFront(sc){
   const st = sc.style;
+  if (st.empty) return;
   if (st.rigid){
     // suelo sólido de p: quieto, como mampostería
     const g = ctx.createLinearGradient(0, surfaceY, 0, H);

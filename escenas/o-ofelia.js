@@ -31,7 +31,7 @@ function makeOfelia(){
       const b = this.body;
       Body.setVelocity(b, { x: b.velocity.x + dir * mag * C.push, y: b.velocity.y });
       this.strands--; this.lastPass = t; this.idleF = 0;
-      Memoria.give(this, P.memoria.action);
+
       if (this.strands <= 0){ Composite.remove(engine.world, this.rope); this.state = 'fall'; }
     },
 
@@ -81,7 +81,7 @@ function makeOfelia(){
 
         if (this.state === 'sink'){
           if (this.morph >= 1 && b.speed < 0.15 && Math.abs(this.frac - 0.5) < 0.12){
-            if (++this.still > C.restFrames){ this.state = 'formed'; Memoria.lock(this); }
+            if (++this.still > C.restFrames){ this.state = 'formed'; Cartela.show(this.obra); }
           } else this.still = 0;
         } else if (++this.endF > C.holdAfter) this.done = true;
       }

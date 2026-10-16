@@ -45,12 +45,11 @@ function makeLaodamia(){
       if (this.frozen || !interactive) return;
 
       if (SALA && !this.holding && ++this.idleF > C.idleWind * 60) this.holding = true;  // nadie viene: ella va sola
-      if (this.holding) Memoria.give(this, 0.003);
 
       if (this.state === 'apart'){
         if (this.holding){
           this.x = Math.min(finalX, this.x + C.walk);
-          if (this.x >= finalX){ this.x = finalX; this.state = 'embrace'; Memoria.give(this, P.memoria.action); }
+          if (this.x >= finalX){ this.x = finalX; this.state = 'embrace'; }
         } else {
           this.x = Math.max(startX, this.x - C.walk * C.back);   // la separan: retrocede
         }
@@ -65,7 +64,7 @@ function makeLaodamia(){
       } else if (this.state === 'fuse'){
         this.e = Math.min(1, this.e + 1 / C.fuseFrames);
         this.heat = Math.max(0, this.heat - 0.02);                               // se apaga sobre ella
-        if (this.e >= 1){ this.state = 'formed'; Memoria.lock(this); }
+        if (this.e >= 1){ this.state = 'formed'; Cartela.show(this.obra); }
       } else if (this.state === 'formed'){
         this.heat = Math.max(0, this.heat - 0.02);
         if (++this.endF > C.holdAfter) this.done = true;

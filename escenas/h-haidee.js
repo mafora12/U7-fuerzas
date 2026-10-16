@@ -56,7 +56,7 @@ function makeHaidee(){
       if (!this.nearJuan(x, y)) return;
       this.grabbed = true; this.grabDX = this.jx - x; this.idleF = 0;
       if (this.state === 'bound') this.state = 'stretch';
-      Memoria.give(this, P.memoria.action * 0.5);
+
     },
     release(){
       if (!this.grabbed) return;
@@ -76,15 +76,14 @@ function makeHaidee(){
         if (this.state === 'bound') this.auto = hX + D0 * (C.breakRatio + 0.2);
       }
       const target = this.grabbed ? constrain(pointer.x + this.grabDX, minX, maxX) : this.auto;
-      if (this.grabbed) Memoria.give(this, 0.004);
-
+      
       if (this.state === 'lying' || this.state === 'standing'){
         if (target != null){
           this.state = 'standing';
           this.jx += (target - this.jx) * (this.auto != null ? 0.03 : 0.35);
           if (Math.abs(this.jx - (hX + D0)) < D0 * C.bondRange){
             this.state = 'bonding'; this.grow = 0; this.auto = null;
-            Memoria.give(this, P.memoria.action);
+
           }
         }
         if (this.state !== 'lying') this.angle *= 0.82;      // se levanta
@@ -108,7 +107,7 @@ function makeHaidee(){
         }
       } else if (this.state === 'fuse'){
         this.e = Math.min(1, this.e + 1 / C.fuseFrames);
-        if (this.e >= 1){ this.state = 'formed'; Memoria.lock(this); }
+        if (this.e >= 1){ this.state = 'formed'; Cartela.show(this.obra); }
       } else if (this.state === 'formed' && ++this.endF > C.holdAfter){
         this.done = true;
       }
@@ -122,7 +121,7 @@ function makeHaidee(){
 
     crack(){
       this.state = 'crack'; this.grabbed = false; this.auto = null; this.crackF = 0; this.vx = 0;
-      Memoria.give(this, P.memoria.action * 0.7);
+
       const mx = (hX + this.jx) / 2;
       for (let k = 0; k < 16; k++){
         this.crumbs.push({ x: mx + random(-6, 6), y: barY + random(-barH, barH), vx: random(-3, 3), vy: random(-4, 0), s: S * random(0.03, 0.05) });

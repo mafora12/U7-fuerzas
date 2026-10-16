@@ -43,13 +43,13 @@ function makeAtala(){
     press(x, y){
       if (this.frozen || this.state !== 'apart' || !this.nearChactas(x, y)) return;
       this.grabbed = true; this.grabOff = this.dx - x; this.idleF = 0;
-      Memoria.give(this, P.memoria.action * 0.4);
+
     },
     release(){ this.grabbed = false; },
     click(){
       if (this.frozen || this.state !== 'joined' || t - this.joinT < 20) return;  // el clic al soltar el arrastre no cuenta
       this.state = 'vow'; this.idleF = 0;                                   // el voto aparece
-      Memoria.give(this, P.memoria.action);
+
     },
     freeze(){ this.frozen = true; this.grabbed = false; },
 
@@ -63,18 +63,17 @@ function makeAtala(){
       if (this.state === 'apart'){
         if (this.grabbed){
           this.dx = constrain(pointer.x + this.grabOff, 0, startDX * 1.2);
-          Memoria.give(this, 0.003);
         }
         // se buscan: cuando están cerca, se atraen un poco
         if (!this.grabbed && this.dx < C.attract) this.dx *= 0.9;
-        if (this.dx < 2){ this.dx = 0; this.state = 'joined'; this.joinT = t; this.grabbed = false; Memoria.give(this, P.memoria.action); }
+        if (this.dx < 2){ this.dx = 0; this.state = 'joined'; this.joinT = t; this.grabbed = false; }
       } else if (this.state === 'vow'){
         this.vow = Math.min(1, this.vow + 1 / 30);
         if (this.vow >= 1) this.venom = Math.min(1, this.venom + 1 / (C.poison * 60));
         if (this.venom >= 1) this.state = 'fuse';
       } else if (this.state === 'fuse'){
         this.e = Math.min(1, this.e + 1 / C.fuseFrames);
-        if (this.e >= 1){ this.state = 'formed'; Memoria.lock(this); }
+        if (this.e >= 1){ this.state = 'formed'; Cartela.show(this.obra); }
       } else if (this.state === 'formed' && ++this.endF > C.holdAfter){
         this.done = true;
       }

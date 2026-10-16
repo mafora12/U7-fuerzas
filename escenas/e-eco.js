@@ -48,7 +48,7 @@ function makeEco(){
       slot.claimed = true; this.idleF = 0;
       const x0 = constrain(x, sX + stemW, wallX - 20);
       this.voices.push({ x: x0, y: constrain(y, sTop - S * 0.3, surf - 10), y0: constrain(y, sTop - S * 0.3, surf - 10), x0, dir: 1, slot, trail: [] });
-      Memoria.give(this, P.memoria.action);
+
     },
     freeze(){ this.frozen = true; },
 
@@ -78,7 +78,7 @@ function makeEco(){
       if (this.state === 'voice' && slots.every(s => s.grow >= 1)){ this.state = 'fuse'; }
       else if (this.state === 'fuse'){
         this.e = Math.min(1, this.e + 1 / C.fuseFrames);
-        if (this.e >= 1){ this.state = 'formed'; Memoria.lock(this); }
+        if (this.e >= 1){ this.state = 'formed'; Cartela.show(this.obra); }
       } else if (this.state === 'formed'){
         this.ghost = Math.min(1, this.ghost + 1 / 90);
         if (++this.endF > C.holdAfter) this.done = true;

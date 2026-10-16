@@ -40,11 +40,11 @@ function makeInes(){
       this.idleF = 0;
       if (this.state === 'standing'){
         this.state = 'fallen'; this.av = -0.03; this.clicks = 0;            // la asesinan
-        Memoria.give(this, P.memoria.action * 0.5);
+
         for (let k = 0; k < 10; k++) this.shards.push({ x: baseX, y: surf - len * random(0.3, 0.9), vx: random(-3, 1), vy: random(-3, 0), s: S * random(0.03, 0.05) });
       } else if (this.state === 'fallen'){
         this.av += C.lift; this.clicks++;                                  // insistir: levantarla
-        Memoria.give(this, P.memoria.action * 0.35);
+
       }
     },
     freeze(){ this.frozen = true; },
@@ -66,14 +66,14 @@ function makeInes(){
         if (this.a <= -Math.PI / 2){ this.a = -Math.PI / 2; this.av = Math.max(0, this.av) * 0.2; }
         if (this.a > 0.04) { this.a = 0.04; this.av = Math.min(0, this.av); }
         // de pie otra vez: la sostienes un instante y llega la corona
-        if (Math.abs(this.a) < 0.05){ if (++this.still > 6){ this.state = 'crowning'; this.a = 0; this.av = 0; Memoria.give(this, P.memoria.action); } }
+        if (Math.abs(this.a) < 0.05){ if (++this.still > 6){ this.state = 'crowning'; this.a = 0; this.av = 0; } }
         else this.still = 0;
       } else if (this.state === 'crowning'){
         this.crownY += (crownTarget - this.crownY) * 0.08 + 1;
         if (this.crownY >= crownTarget){ this.crownY = crownTarget; this.state = 'fuse'; }
       } else if (this.state === 'fuse'){
         this.e = Math.min(1, this.e + 1 / C.fuseFrames);
-        if (this.e >= 1){ this.state = 'formed'; Memoria.lock(this); }
+        if (this.e >= 1){ this.state = 'formed'; Cartela.show(this.obra); }
       } else if (this.state === 'formed' && ++this.endF > C.holdAfter){
         this.done = true;
       }

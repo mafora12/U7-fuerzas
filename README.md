@@ -17,11 +17,12 @@ Cada letra de OPHELIA es una mujer que murió de forma trágica y romántica. Un
 
 ## Atributo: rescatar obras que se están olvidando
 
-Cada escena tiene una **memoria** (0–1) que se ve en la pantalla:
+La sucesión de escenas es una línea de olvido:
 
-- **Sin interacción, se olvida:** la memoria baja con el tiempo. La escena pierde color hasta quedar gris y la forma suelta letras que se lleva el viento.
-- **Las acciones la devuelven:** cada clic, pasada o arrastre suma memoria, y mover el mouse cerca de la forma (mirarla) también suma. La escena recupera los colores del cuadro.
-- **Al formarse la letra, la memoria queda fija.** Si la cuidaste, aparece la cartela de su obra (nombre, título, autor y año). Si la abandonaste, queda gris, gastada y sin nombre.
+- **Cada letra es más transparente que la anterior:** la O es opaca y la A casi transparente.
+- **Cada fondo es más apagado que el anterior:** la primera escena es de color vívido y la última casi gris.
+- **Escena final:** por primera vez aparece OPHELIA completa, con el degradado de transparencia de O a A. Después se desintegra en partículas que se lleva un campo de ruido, empezando por la A (la más olvidada) y terminando en la O. Cuando no queda nada, la pieza vuelve a empezar.
+- Cuando cada letra se forma aparece la cartela de su obra:
 
 | Letra | Obra de la cartela |
 |---|---|
@@ -38,7 +39,7 @@ Cada escena tiene una **memoria** (0–1) que se ve en la pantalla:
 - `index.html`: carga librerías y scripts.
 - `style.css`
 - `sketch.js`: motor (p5.js + Matter.js), agua tipográfica, cambio de escena (la cámara baja: la escena anterior sale por arriba y la siguiente entra desde abajo), panel de reglas y parámetros `P`.
-- `memoria.js`: la regla de memoria (olvido, desgaste con campo de ruido, color y cartela).
+- `memoria.js`: el olvido (opacidad de cada letra y color de cada fondo) y la cartela.
 - `glifo.js`: convierte cada letra en un campo de distancias (SDF) para deformar una forma simple hasta volverla la letra.
 - `escenas/o-ofelia.js`: escena O.
 - `escenas/p-pia.js`: escena P.
@@ -47,7 +48,7 @@ Cada escena tiene una **memoria** (0–1) que se ve en la pantalla:
 - `escenas/l-laodamia.js`: escena L.
 - `escenas/i-ines.js`: escena I.
 - `escenas/a-atala.js`: escena A.
-- `escenas/pendiente.js`: marcador para escenas sin hacer.
+- `escenas/final.js`: OPHELIA completa que se desintegra.
 
 ## Uso
 
@@ -57,6 +58,6 @@ Cada escena tiene una **memoria** (0–1) que se ve en la pantalla:
 
 - Abre `index.html` con Live Server (VS Code) o cualquier servidor local.
 - `index.html#sala`: modo pantalla del museo; si nadie interactúa en 20 s, el viento rompe la cuerda.
-- Tecla **R**: panel de reglas con las variables en vivo, incluida la memoria (para la bitácora).
+- Tecla **R**: panel de reglas con las variables en vivo, incluida la opacidad de la letra (para la bitácora).
 - Tecla **→**: salta a la siguiente escena (para probar).
 - Los parámetros editables están en el objeto `P` al inicio de `sketch.js`.

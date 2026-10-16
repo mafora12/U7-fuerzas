@@ -45,12 +45,12 @@ function makePia(){
       if (this.state === 'ready'){
         this.circle = { x: constrain(x, br, W - br), y: constrain(y, br, bowlF.y - br * 2) }; // siempre por encima de la punta
         this.state = 'circle'; this.grow = 0; this.idleF = 0;
-        Memoria.give(this, P.memoria.action);
+
       } else if (this.state === 'circle' && this.grow >= 1){
         // segundo clic, no tiene que ser seguido: Pía se tambalea y cae
         this.from = { ...this.circle };
         this.state = 'wobble'; this.w = 0; this.s = 0; this.idleF = 0;
-        Memoria.give(this, P.memoria.action);
+
       }
     },
 
@@ -88,7 +88,7 @@ function makePia(){
         if (this.s >= 1){ this.state = 'fuse'; this.jolt = 0.7; }
       } else if (this.state === 'fuse'){
         this.e = Math.min(1, this.e + 1 / C.fuseFrames);
-        if (this.e >= 1){ this.state = 'formed'; Memoria.lock(this); }
+        if (this.e >= 1){ this.state = 'formed'; Cartela.show(this.obra); }
       } else if (this.state === 'formed' && ++this.endF > C.holdAfter){
         this.done = true;
       }
