@@ -34,30 +34,4 @@ La sucesión de escenas es una línea de olvido:
 | I | *The Coronation of Inês de Castro in 1361*, Pierre-Charles Comte, 1849 |
 | A | *Atala au tombeau*, Anne-Louis Girodet, 1808, Louvre |
 
-## Estructura
 
-- `index.html`: carga librerías y scripts.
-- `style.css`
-- `sketch.js`: motor (p5.js + Matter.js), agua tipográfica, cambio de escena (la cámara baja: la escena anterior sale por arriba y la siguiente entra desde abajo), panel de reglas y parámetros `P`.
-- `memoria.js`: el olvido (opacidad de cada letra y color de cada fondo) y la cartela.
-- `glifo.js`: convierte cada letra en un campo de distancias (SDF) para deformar una forma simple hasta volverla la letra.
-- `escenas/o-ofelia.js`: escena O.
-- `escenas/p-pia.js`: escena P.
-- `escenas/h-haidee.js`: escena H.
-- `escenas/e-eco.js`: escena E.
-- `escenas/l-laodamia.js`: escena L.
-- `escenas/i-ines.js`: escena I.
-- `escenas/a-atala.js`: escena A.
-- `escenas/final.js`: OPHELIA completa que se desintegra.
-
-## Uso
-
-- Al subir cambios, sube el número `?v=` de los scripts en `index.html` para que el navegador no use la versión vieja en caché.
-
-- En línea: https://mafora12.github.io/U7-fuerzas/ (se publica sola con cada push a `main`).
-
-- Abre `index.html` con Live Server (VS Code) o cualquier servidor local.
-- `index.html#sala`: modo pantalla del museo; si nadie interactúa en 20 s, el viento rompe la cuerda.
-- Tecla **R**: panel de reglas con las variables en vivo, incluida la opacidad de la letra (para la bitácora).
-- Tecla **→**: salta a la siguiente escena (para probar).
-- Los parámetros editables están en el objeto `P` al inicio de `sketch.js`.
