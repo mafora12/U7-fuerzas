@@ -28,7 +28,7 @@ function makePia(){
   return {
     level, style: ESTILOS.tierra, center: { x: cx, y: surf }, R: g.gw * 0.6, done: false,
     letter: 'P', dustChar: 'p',
-    obra: { quien: "Pía de' Tolomei", obra: "La Pia de' Tolomei", autor: 'Dante Gabriel Rossetti · 1868–80' },
+    obra: { quien: "Pía de' Tolomei", obra: "La Pia de' Tolomei", autor: 'Dante Gabriel Rossetti · 1868–80', muerte: 'Encerrada en un castillo del pantano y, según la leyenda, arrojada por la ventana.' },
     focus(){ return this.circle || { x: towerX, y: this.top }; },
     edge(){
       if (this.state === 'wait') return null;

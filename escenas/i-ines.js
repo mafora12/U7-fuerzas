@@ -26,7 +26,7 @@ function makeInes(){
   return {
     level, style: ESTILOS.palacio, center: { x: baseX, y: surf }, R: len, done: false,
     letter: 'I', dustChar: 'i',
-    obra: { quien: 'Inés de Castro', obra: 'The Coronation of Inês de Castro in 1361', autor: 'Pierre-Charles Comte · 1849' },
+    obra: { quien: 'Inés de Castro', obra: 'The Coronation of Inês de Castro in 1361', autor: 'Pierre-Charles Comte · 1849', muerte: 'Asesinada y coronada reina después de muerta.' },
     state: 'standing', a: 0, av: 0, clicks: 0, crownY: -S, still: 0, e: 0, endF: 0, idleF: 0, frozen: false, shards: [],
 
     focus(){ return { x: baseX + Math.sin(this.a) * len * 0.5, y: surf - Math.cos(this.a) * len * 0.5 }; },

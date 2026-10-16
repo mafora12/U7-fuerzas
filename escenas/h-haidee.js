@@ -32,7 +32,7 @@ function makeHaidee(){
   return {
     level, style: ESTILOS.playa, center: { x: cx, y: surf }, R: D0, done: false,
     letter: 'H', dustChar: 'h',
-    obra: { quien: 'Haidée', obra: 'The Finding of Don Juan by Haidée', autor: 'Ford Madox Brown · 1869' },
+    obra: { quien: 'Haidée', obra: 'The Finding of Don Juan by Haidée', autor: 'Ford Madox Brown · 1869', muerte: 'Murió de pena cuando la separaron de Don Juan.' },
     state: 'lying', jx: W * 0.86, vx: 0, angle: -Math.PI / 2, grabbed: false, grabDX: 0,
     grow: 0, crackF: 0, e: 0, endF: 0, idleF: 0, frozen: false, auto: null, crumbs: [],
 

@@ -29,6 +29,7 @@ const Cartela = {
     el.querySelector('.quien').textContent = o.quien;
     el.querySelector('.obra').textContent = o.obra;
     el.querySelector('.autor').textContent = o.autor;
+    el.querySelector('.muerte').textContent = o.muerte || '';
     el.hidden = false;
     requestAnimationFrame(() => el.classList.add('on'));
   },

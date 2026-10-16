@@ -18,7 +18,7 @@ function makeOfelia(){
   return {
     level, style: ESTILOS.rio, center: body.position, R, done: false,
     letter: 'O', dustChar: 'o',
-    obra: { quien: 'Ofelia', obra: 'Ophelia', autor: 'John Everett Millais · 1851–52 · Tate Britain' },
+    obra: { quien: 'Ofelia', obra: 'Ophelia', autor: 'John Everett Millais · 1851–52 · Tate Britain', muerte: 'Ahogada en el río.' },
     focus(){ return this.body.position; },
     edge(){
       const a = random(TAU), p = this.body.position;

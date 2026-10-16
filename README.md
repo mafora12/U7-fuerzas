@@ -45,7 +45,7 @@ Todo lo que se ve sale de las letras, como en *Word as Image* de Ji Lee. Los obj
 | I | Inés de Castro | Un asta lisa de pie. | **Primer clic:** la asesinan y cae. **Clics insistentes:** cada clic la levanta un poco; si dejas de insistir, la gravedad la vuelve a tumbar. Si la pones de pie, baja una corona y se funden en la I con sus remates. Es la única que vuelve: rescatar del olvido exige insistir. |
 | A | Atala | Dos astas inclinadas que se buscan sin tocarse (Atala y Chactas). | **Arrastrar** a Chactas hacia ella: cuando las puntas se acercan se atraen y quedan unidas en la cima. **Clic:** aparece el voto (el travesaño), que se llena de veneno verde de abajo hacia arriba y sube por las astas. Cuando lo llena, la forma verde se funde como las demás letras en la A de la tipografía y el verde se apaga. |
 
-Cuando cada letra se forma, aparece la cartela de su obra:
+Cuando cada letra se forma, aparece la cartela de su obra con el nombre de la mujer, el título, el autor, el año y cómo murió:
 
 | Letra | Obra |
 |---|---|

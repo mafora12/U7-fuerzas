@@ -25,5 +25,6 @@ body{background:var(--river);color:var(--bone);font-family:var(--ui);overflow:hi
 .cartela p{margin:0}
 .cartela .quien{font-family:var(--display);font-size:24px;line-height:1.1}
 .cartela .obra{font-family:var(--display);font-style:italic;font-size:15px}
+.cartela .muerte{font-family:var(--display);font-style:italic;font-size:14px;line-height:1.35;color:#3a3529;border-top:1px solid #cfc7b0;padding-top:7px;margin-top:6px}
 .cartela .autor{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#5b5648;margin-top:4px}
 @media (prefers-reduced-motion: reduce){.cartela{transition:none}}

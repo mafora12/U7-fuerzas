@@ -26,7 +26,7 @@ function makeEco(){
   return {
     level, style: ESTILOS.bosque, center: { x: sX, y: surf }, R: g.gw, done: false,
     letter: 'E', dustChar: 'e',
-    obra: { quien: 'Eco', obra: 'Echo and Narcissus', autor: 'John William Waterhouse · 1903' },
+    obra: { quien: 'Eco', obra: 'Echo and Narcissus', autor: 'John William Waterhouse · 1903', muerte: 'Se consumió de amor hasta quedar solo en voz.' },
     state: 'voice', voices: [], wallFlash: 0, e: 0, ghost: 0, endF: 0, idleF: 0, frozen: false,
 
     focus(){ return { x: sX, y: surf - stemH * 0.5 }; },

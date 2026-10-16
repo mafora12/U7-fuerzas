@@ -26,7 +26,7 @@ function makeLaodamia(){
   return {
     level, style: ESTILOS.brasas, center: { x: cx, y: surf }, R: g.gw, done: false,
     letter: 'L', dustChar: 'l',
-    obra: { quien: 'Laodamía', obra: 'Laodamia', autor: 'George William Joy · 1878' },
+    obra: { quien: 'Laodamía', obra: 'Laodamia', autor: 'George William Joy · 1878', muerte: 'Abrazó la estatua de su esposo muerto hasta morir con ella en el fuego.' },
     state: 'apart', x: startX, holding: false, heat: 0, sparks: [], e: 0, endF: 0, idleF: 0, frozen: false,
 
     focus(){ return { x: (this.x + statue.x1) / 2, y: surf - stemH * 0.4 }; },

@@ -27,7 +27,7 @@ function makeAtala(){
   return {
     level, style: ESTILOS.gruta, center: { x: cx, y: surf }, R: g.gw, done: false,
     letter: 'A', dustChar: 'a',
-    obra: { quien: 'Atala', obra: 'Atala au tombeau', autor: 'Anne-Louis Girodet · 1808 · Louvre' },
+    obra: { quien: 'Atala', obra: 'Atala au tombeau', autor: 'Anne-Louis Girodet · 1808 · Louvre', muerte: 'Se envenenó antes que romper un voto.' },
     state: 'apart', joinT: 0, dx: startDX, grabbed: false, grabOff: 0, vow: 0, venom: 0, drips: [], e: 0, endF: 0, idleF: 0, frozen: false,
 
     focus(){ return { x: cx + this.dx / 2, y: yF }; },
