@@ -108,12 +108,26 @@ function makeAtala(){
 
     // el veneno va en su propia capa, a opacidad completa y sin el gris del olvido
     drawFx(f){
-      // al fundirse, el verde se apaga mientras aparece la A de la tipografía
-      const k = this.state === 'formed' ? 0 : this.state === 'fuse' ? 1 - smooth(this.e) : 1;
-      if ((this.venom <= 0 || k <= 0) && !this.drips.length) return;
+      if (this.state === 'formed') return;
+      if (this.state === 'fuse'){
+        // se funde como las demás letras: la forma verde se deforma hasta ser la A
+        // de la tipografía y el verde se apaga mientras tanto
+        const n = g.N, sz = n / g.k;
+        if (!this.tint){ this.tint = document.createElement('canvas'); this.tint.width = this.tint.height = n; }
+        const tc = this.tint.getContext('2d');
+        tc.globalCompositeOperation = 'source-over'; tc.clearRect(0, 0, n, n);
+        tc.drawImage(g.cv, 0, 0);
+        tc.globalCompositeOperation = 'source-in'; tc.fillStyle = poison; tc.fillRect(0, 0, n, n);
+        f.save();
+        f.globalAlpha = 1 - smooth(this.e);
+        f.shadowColor = poison; f.shadowBlur = 18 * (1 - this.e);
+        f.drawImage(this.tint, cx - sz / 2, yF - sz / 2, sz, sz);
+        f.restore();
+        return;
+      }
+      if (this.venom <= 0 && !this.drips.length) return;
       const v = this.venom;
       f.save();
-      f.globalAlpha = k;
       f.shadowColor = poison; f.shadowBlur = 18;
       f.fillStyle = poison; f.strokeStyle = poison;
       // el voto se llena de abajo hacia arriba
