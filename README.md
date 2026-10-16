@@ -8,7 +8,8 @@ En línea: https://mafora12.github.io/U7-fuerzas/
 
 El punto de partida es el cuadro *Ophelia* de John Everett Millais: Ofelia flota en el río poco antes de ahogarse, rodeada de flores. La pregunta fue qué pasaría si el nombre mismo del cuadro se construyera con muertes así.
 
-La referencia de mecánica es *Dumb Ways to Die*: una serie de escenas cortas, cada una con una muerte y una acción del jugador. Aquí el tono cambia de cómico a trágico y romántico, y cada escena forma una letra:
+La referencia de mecánica es *Dumb Ways to Die*: una serie de escenas cortas, cada una con una muerte y una acción del jugador. Aquí el tono cambia de cómico a trágico y romántico, y cada escena forma una letra:  
+<img width="1000" height="1500" alt="image" src="https://github.com/user-attachments/assets/26d3d3c6-8702-40cc-98e6-b5e7235e0c15" />  
 
 - **O · Ofelia**, ahogada en el río.
 - **P · Pía de' Tolomei**, encerrada en un castillo del pantano y, según la leyenda, arrojada por la ventana.
@@ -29,7 +30,11 @@ Todo lo que se ve sale de las letras, como en *Word as Image* de Ji Lee. Los obj
 **Dónde se usa.**
 
 - **Portada web del museo:** la persona avanza a su ritmo con el mouse.
-- **Pantalla grande dentro del museo** (`index.html#sala`): si nadie interactúa en 20 segundos, la escena avanza sola. Al terminar, la pieza vuelve a empezar.
+  <img width="1702" height="924" alt="Interfaz web de Tate Britain con luna púrpura" src="https://github.com/user-attachments/assets/2d0fa39f-97ae-4c90-ac41-9fab98ae96bc" />  
+
+- **Pantalla grande dentro del museo**: si nadie interactúa en 20 segundos, la escena avanza sola. Al terminar, la pieza vuelve a empezar.
+  <img width="1700" height="925" alt="Galería clásica con paisaje digital púrpura" src="https://github.com/user-attachments/assets/a9db6e84-cf91-436e-8950-382368452075" />
+
 
 ## Qué puede hacer la persona
 
@@ -73,11 +78,6 @@ El atributo no se explica con texto. Se ve en cómo avanza la pieza: la sucesió
 
 **Qué se espera que la persona descubra:** que cada obra se puede reconstruir con sus acciones, pero que el olvido avanza de todas formas. La única forma de que una obra vuelva es que alguien la mire y la reconstruya otra vez, que es lo que el museo intenta hacer.
 
-## Modelo y herramientas
-
-- **p5.js** para dibujar y **Matter.js** para la física de la O (cuerda, caída y flotación).
-- **Fuerzas** en las demás escenas: gravedad (caída de Pía, péndulo invertido de Inés), resorte con amortiguación (travesaño de Haidée), atracción (astas de Atala) y campo de ruido (partículas de la escena final).
-- **Campos de distancia (SDF):** cada letra se convierte en un mapa de distancias. Para que un objeto simple se vuelva la letra, se interpolan la distancia del objeto y la de la letra, y la forma se deforma de verdad en vez de hacer un fundido.
 
 ## Autoevaluación
 
