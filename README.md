@@ -10,8 +10,8 @@ Cada letra de OPHELIA es una mujer que murió de forma trágica y romántica. Un
 | H | Haidée | Parte de un asta de pie (Haidée) y otra tirada en la arena (Don Juan). **Arrastrar** a Don Juan hacia ella: se levanta y, si queda cerca, nace entre los dos un travesaño que funciona como resorte. **Arrastrarlo lejos:** el travesaño se estira y se adelgaza; si lo sueltas, el resorte lo devuelve; si lo estiras demasiado, se quiebra, el golpe los junta y queda la H con el travesaño roto. |
 | E | Eco | Parte de un asta sola en el bosque frente a una pared de roca de e. **Clic** (en cualquier parte): Eco grita; la voz viaja a la pared, rebota y vuelve, y al llegar se pega al asta como un brazo, a la altura más cercana a donde hiciste clic. Tres gritos forman la E, que queda con contornos repetidos: lo único que queda de ella es el eco. |
 | L | Laodamía | Parte de un asta de pie (Laodamía) y, lejos, una barra acostada (la estatua de su esposo). **Mantener presionado** (en cualquier parte): ella camina hacia la estatua; si sueltas, retrocede. Al tocarla y seguir presionando, la abraza: la estatua se enciende y suelta chispas. Cuando el fuego llega al máximo se apaga y quedan fundidas en la L. |
-| I | Inés de Castro | Cae; si la persona insiste, su punto vuelve como corona. *(pendiente)* |
-| A | Atala | Sus astas se buscan; el travesaño (el voto) las separa. Si las fuerzas, se envenena y colapsa. *(pendiente)* |
+| I | Inés de Castro | Parte de un asta lisa de pie. **Primer clic:** la asesinan y cae. **Clics insistentes:** cada clic la levanta un poco; si dejas de insistir, la gravedad la vuelve a tumbar. Si la pones de pie, baja una corona y se funden en la I con sus remates. Es la única que vuelve: rescatar del olvido exige insistir. |
+| A | Atala | Parte de dos astas inclinadas que se buscan sin tocarse (Atala y Chactas). **Arrastrar** a Chactas hacia ella: cuando las puntas se acercan se atraen y quedan unidas en la cima. **Clic:** aparece el voto (el travesaño), que se envenena de abajo hacia arriba; cuando el veneno lo llena, se funden en la A. |
 
 **Regla de todas las escenas:** cada letra parte de un objeto simple y se forma con acciones del mouse.
 
@@ -30,6 +30,8 @@ Cada escena tiene una **memoria** (0–1) que se ve en la pantalla:
 | H | *The Finding of Don Juan by Haidée*, Ford Madox Brown, 1869 |
 | E | *Echo and Narcissus*, John William Waterhouse, 1903 |
 | L | *Laodamia*, George William Joy, 1878 |
+| I | *The Coronation of Inês de Castro in 1361*, Pierre-Charles Comte, 1849 |
+| A | *Atala au tombeau*, Anne-Louis Girodet, 1808, Louvre |
 
 ## Estructura
 
@@ -43,6 +45,8 @@ Cada escena tiene una **memoria** (0–1) que se ve en la pantalla:
 - `escenas/h-haidee.js`: escena H.
 - `escenas/e-eco.js`: escena E.
 - `escenas/l-laodamia.js`: escena L.
+- `escenas/i-ines.js`: escena I.
+- `escenas/a-atala.js`: escena A.
 - `escenas/pendiente.js`: marcador para escenas sin hacer.
 
 ## Uso

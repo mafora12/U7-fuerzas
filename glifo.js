@@ -159,12 +159,59 @@ const Glifo = (() => {
     return out;
   }
 
+  // Franjas de tinta en una fila (px de pantalla): [{x0, x1}, ...] de izquierda a derecha
+  function runsAt(g, yL){
+    const c = g.N / 2, j = Math.round(yL * g.k + c), out = [];
+    let i0 = -1;
+    for (let i = 0; i <= g.N; i++){
+      const ink = i < g.N && g.mask[j * g.N + i];
+      if (ink && i0 < 0) i0 = i;
+      if (!ink && i0 >= 0){ out.push({ x0: (i0 - c) / g.k, x1: (i - c) / g.k }); i0 = -1; }
+    }
+    return out;
+  }
+
+  // A: las dos astas diagonales como líneas (pie → vértice) con su grosor, y el travesaño
+  function diagonals(g){
+    const c = g.N / 2, top = (g.inkTop - c) / g.k, bot = (g.inkBot + 1 - c) / g.k, h = bot - top;
+    const ya = top + h * 0.82, yb = top + h * 0.32;
+    const ra = runsAt(g, ya), rb = runsAt(g, yb);
+    const mid = r => (r.x0 + r.x1) / 2;
+    const L1 = ra[0], R1 = ra[ra.length - 1], L2 = rb[0], R2 = rb[rb.length - 1];
+    const line = (p1, p2, w) => {
+      const dx = (p2.x - p1.x) / (p2.y - p1.y);
+      return { x0: p1.x + dx * (bot - p1.y), y0: bot, x1: p1.x + dx * (top - p1.y), y1: top, w };
+    };
+    const left = line({ x: mid(L1), y: ya }, { x: mid(L2), y: yb }, (L1.x1 - L1.x0) * 0.8);
+    const right = line({ x: mid(R1), y: ya }, { x: mid(R2), y: yb }, (R1.x1 - R1.x0) * 0.8);
+    // travesaño: en la columna central, la franja de tinta entre 45% y 85% de la altura
+    const col = Math.round(((left.x1 + right.x1) / 2) * g.k + c);
+    let cross = null, j0 = -1;
+    for (let j = 0; j <= g.N; j++){
+      const ink = j < g.N && g.mask[j * g.N + col];
+      if (ink && j0 < 0) j0 = j;
+      if (!ink && j0 >= 0){
+        const y0 = (j0 - c) / g.k, y1 = (j - c) / g.k, ym = (y0 + y1) / 2;
+        if (ym > top + h * 0.45 && ym < top + h * 0.85) cross = { y0, y1 };
+        j0 = -1;
+      }
+    }
+    if (!cross) cross = { y0: top + h * 0.6, y1: top + h * 0.66 };
+    return { left, right, cross, top, bot };
+  }
+
+  // distancia a un segmento grueso (x0,y0)-(x1,y1) de ancho w
+  function seg(x, y, s){
+    const vx = s.x1 - s.x0, vy = s.y1 - s.y0, u = Math.max(0, Math.min(1, ((x - s.x0) * vx + (y - s.y0) * vy) / (vx * vx + vy * vy)));
+    return Math.hypot(x - (s.x0 + vx * u), y - (s.y0 + vy * u)) - s.w / 2;
+  }
+
   function box(x, y, b){
     const dx = Math.abs(x - b.cx) - b.hx, dy = Math.abs(y - b.cy) - b.hy;
     return Math.hypot(Math.max(dx, 0), Math.max(dy, 0)) + Math.min(Math.max(dx, dy), 0);
   }
 
-  return { make, render, draw, stem, stems, bar, arms, box };
+  return { make, render, draw, stem, stems, bar, arms, diagonals, seg, box };
 })();
 
 const smooth = x => { x = Math.min(1, Math.max(0, x)); return x * x * (3 - 2 * x); };

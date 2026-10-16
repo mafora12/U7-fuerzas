@@ -56,6 +56,23 @@ const P = {
     holdAfter: 150,
     idleWind: 20
   },
+  ines: {
+    height: 0.42,      // alto de la I respecto a la pantalla
+    lift: 0.045,       // cuánto la levanta cada clic de insistencia
+    gravity: 0.0025,   // cuánto la tumba la gravedad (péndulo invertido)
+    damping: 0.97,
+    fuseFrames: 45,
+    holdAfter: 150,
+    idleWind: 20
+  },
+  atala: {
+    height: 0.42,      // alto de la A respecto a la pantalla
+    attract: 14,       // a esta distancia (px) las astas se atraen solas
+    poison: 2.5,       // segundos que tarda el veneno en llenar el voto
+    fuseFrames: 45,
+    holdAfter: 150,
+    idleWind: 20
+  },
   memoria: {
     start: 0.55,       // memoria con la que empieza cada escena
     decay: 0.035,      // cuánto se olvida por segundo sin interacción
@@ -80,7 +97,11 @@ const ESTILOS = {
   bosque: { rigid: true, char: 'e', tint: '160,186,112', reed: '',
             sky: ['#08120d', '#28472f'], bed: ['#33421f', '#0e1409'] },           // Waterhouse: bosque y estanque
   brasas: { rigid: true, char: 'l', tint: '196,120,74', reed: '',
-            sky: ['#0b0604', '#2c140b'], bed: ['#3b1c0e', '#100602'] }            // Joy: interior a la luz del fuego
+            sky: ['#0b0604', '#2c140b'], bed: ['#3b1c0e', '#100602'] },           // Joy: interior a la luz del fuego
+  palacio: { rigid: true, char: 'i', tint: '186,166,206', reed: '',
+             sky: ['#0a0912', '#2b2442'], bed: ['#2d2338', '#0c0a12'] },          // Comte: corte, terciopelo y oro
+  gruta: { rigid: true, char: 'a', tint: '196,186,150', reed: '',
+           sky: ['#06080a', '#1e2b2c'], bed: ['#2e2a20', '#0b0a07'] }             // Girodet: gruta y luz fría
 };
 
 let engine, ctx, W, H, S, surfaceY = 0, reeds = [], rowPats = {}, glifos = {};
@@ -123,7 +144,9 @@ function layout(){
   glifos = { O: Glifo.make('O', S, BONE), P: Glifo.make('P', sizeP, BONE, 640),
              H: Glifo.make('H', sizeFor('H', P.haidee.height), BONE, 640),
              E: Glifo.make('E', sizeFor('E', P.eco.height), BONE, 640),
-             L: Glifo.make('L', sizeFor('L', P.laodamia.height), BONE, 640) };
+             L: Glifo.make('L', sizeFor('L', P.laodamia.height), BONE, 640),
+             I: Glifo.make('I', sizeFor('I', P.ines.height), BONE, 640),
+             A: Glifo.make('A', sizeFor('A', P.atala.height), BONE, 640) };
   reeds = [];
   for (let x = -10, k = 0; x < W + 20; k++){
     reeds.push({ x, k, h: S * (0.3 + ((k * 37) % 11) / 11 * 0.45), ph: k * 1.7 });
@@ -152,7 +175,7 @@ function buildWorld(){
 }
 
 /* ---------- Escenas: una por letra; la palabra solo aparece al final ---------- */
-const SCENES = [makeOfelia, makePia, makeHaidee, makeEco, makeLaodamia, () => makeStub('I'), () => makeStub('A'), () => makeStub('final')];
+const SCENES = [makeOfelia, makePia, makeHaidee, makeEco, makeLaodamia, makeInes, makeAtala, () => makeStub('final')];
 
 function createScene(i){
   buildWorld();
