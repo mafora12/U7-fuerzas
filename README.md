@@ -8,7 +8,8 @@ En línea: https://mafora12.github.io/U7-fuerzas/
 
 El punto de partida es el cuadro *Ophelia* de John Everett Millais: Ofelia flota en el río poco antes de ahogarse, rodeada de flores. La pregunta fue qué pasaría si el nombre mismo del cuadro se construyera con muertes así.
 
-La referencia de mecánica es *Dumb Ways to Die*: una serie de escenas cortas, cada una con una muerte y una acción del jugador. Aquí el tono cambia de cómico a trágico y romántico, y cada escena forma una letra:
+La referencia de mecánica es *Dumb Ways to Die*: una serie de escenas cortas, cada una con una muerte y una acción del jugador. Aquí el tono cambia de cómico a trágico y romántico, y cada escena forma una letra:  
+<img width="1200" height="1600" alt="image" src="https://github.com/user-attachments/assets/932409fe-c57d-408c-be65-f4fe81b3c943" />  
 
 - **O · Ofelia**, ahogada en el río.
 - **P · Pía de' Tolomei**, encerrada en un castillo del pantano y, según la leyenda, arrojada por la ventana.
