@@ -69,7 +69,7 @@ const P = {
     height: 0.42,      // alto de la A respecto a la pantalla
     attract: 14,       // a esta distancia (px) las astas se atraen solas
     poison: 2.5,       // segundos que tarda el veneno en llenar el voto
-    fuseFrames: 45,
+    fuseFrames: 80,     // frames en que el verde se apaga y aparece la A de la tipografía
     holdAfter: 150,
     idleWind: 20
   },

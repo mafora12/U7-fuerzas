@@ -74,7 +74,7 @@ function makeAtala(){
         if (this.vow >= 1) this.venom = Math.min(1, this.venom + 1 / (C.poison * 60));
         if (this.venom >= 1) this.state = 'fuse';
         // gotas de veneno que caen del voto
-        if (this.venom > 0 && Math.random() < 0.25){
+        if (this.venom > 0 && this.venom < 1 && Math.random() < 0.25){
           this.drips.push({ x: cx + crossL.cx + random(-crossL.hx, crossL.hx), y: crossY + crossH / 2, vy: 0, a: 1 });
         }
       } else if (this.state === 'fuse'){
@@ -108,9 +108,12 @@ function makeAtala(){
 
     // el veneno va en su propia capa, a opacidad completa y sin el gris del olvido
     drawFx(f){
-      if (this.venom <= 0 && !this.drips.length) return;
+      // al fundirse, el verde se apaga mientras aparece la A de la tipografía
+      const k = this.state === 'formed' ? 0 : this.state === 'fuse' ? 1 - smooth(this.e) : 1;
+      if ((this.venom <= 0 || k <= 0) && !this.drips.length) return;
       const v = this.venom;
       f.save();
+      f.globalAlpha = k;
       f.shadowColor = poison; f.shadowBlur = 18;
       f.fillStyle = poison; f.strokeStyle = poison;
       // el voto se llena de abajo hacia arriba
