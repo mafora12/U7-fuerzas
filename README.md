@@ -30,7 +30,12 @@ Todo lo que se ve sale de las letras, como en *Word as Image* de Ji Lee. Los obj
 **Dónde se usa.**
 
 - **Portada web del museo:** la persona avanza a su ritmo con el mouse.
-- **Pantalla grande dentro del museo** (`index.html#sala`): si nadie interactúa en 20 segundos, la escena avanza sola. Al terminar, la pieza vuelve a empezar.
+  <img width="1702" height="924" alt="Interfaz web de Tate Britain con luna púrpura" src="https://github.com/user-attachments/assets/1bd2d7b3-62a4-48f7-b771-155003e83bf7" />
+  
+
+- **Pantalla grande dentro del museo** : si nadie interactúa en 20 segundos, la escena avanza sola. Al terminar, la pieza vuelve a empezar.  
+  <img width="1700" height="925" alt="Galería clásica con paisaje digital púrpura" src="https://github.com/user-attachments/assets/af5f067a-1515-4787-9d4c-c6369f939294" />  
+
 
 ## Qué puede hacer la persona
 
